@@ -425,7 +425,7 @@ export default function App() {
               {httpOpen && (
                 <span className="http-pop">
                   <input
-                    className="http-host" placeholder="192.168.1.23"
+                    className="http-host" placeholder={t('device IP')}
                     value={http.host}
                     onChange={(e) => http.setHost(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') void http.connect(); }}

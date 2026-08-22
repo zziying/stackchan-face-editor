@@ -24,6 +24,7 @@ const ZH: Record<string, string> = {
     '用USB线连接一台跑参考固件的StackChan',
   'Web Serial needs Chrome or Edge': 'Web Serial需要Chrome或Edge',
   WiFi: 'WiFi',
+  'device IP': '填入设备IP',
   Connect: '连接',
   'live-push over WiFi to a StackChan whose firmware has the HTTP face API':
     'WiFi实时推送到实现了HTTP换脸API的StackChan（如keke_firmware），填设备IP即可',
