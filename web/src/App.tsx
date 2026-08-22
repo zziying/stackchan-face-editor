@@ -15,6 +15,7 @@ import { useDeviceHttp } from './face/httpDevice';
 import { WIZ_STEPS, prepareStep, stepEngaged, type WizStart } from './face/wizard';
 import WizardBar from './components/WizardBar';
 import PresetGallery from './components/PresetGallery';
+import DeviceHub from './components/DeviceHub';
 import { useI18n } from './i18n';
 import {
   ANIM_FIELDS, BROW_FIELDS, EYE_FIELDS, MOUTH_FIELDS, PALETTE_FIELDS,
@@ -145,12 +146,11 @@ export default function App() {
   // Second push channel: HTTP over WiFi (keke-style firmware endpoints).
   const http = useDeviceHttp((msg) => flash(`device: ${t(msg)}`));
   const httpConnected = http.status === 'connected';
-  const [httpOpen, setHttpOpen] = useState(false);
+  // the Live-sculpt hub above the control panels: flashing guide + both
+  // connect channels live there, so the header only toggles it
+  const [hubOpen, setHubOpen] = useState(false);
   useEffect(() => {
-    if (httpConnected) {
-      setHttpOpen(false);
-      flash(t('connected over WiFi'));
-    }
+    if (httpConnected) flash(t('connected over WiFi'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [httpConnected]);
 
@@ -402,52 +402,13 @@ export default function App() {
             </button>
           </>
         ) : (
-          <>
-            {/* the tip lives on a wrapper: disabled buttons don't fire :hover,
-                and the disabled state is exactly when the reason matters */}
-            <span
-              className="tip-wrap"
-              data-tip={t(serialSupported ? 'USB-connect a StackChan running the reference firmware'
-                : 'pushing to a device needs Chrome on localhost or HTTPS — or export the JSON to its SD card')}
-            >
-              <button
-                disabled={!serialSupported || serial.status === 'connecting'}
-                onClick={() => serial.connect()}
-              >
-                {t(serial.status === 'connecting' ? 'Connecting…' : 'Connect device')}
-              </button>
-            </span>
-            {/* an https page can't fetch an http device (mixed content), so
-                the WiFi channel only exists on http origins — don't offer a
-                button that can never succeed on the hosted editor */}
-            {location.protocol !== 'https:' && (
-            <span className="http-anchor">
-              <button
-                className={httpOpen ? 'serial-on' : ''}
-                data-tip={t('live-push over WiFi to a StackChan whose firmware has the HTTP face API')}
-                onClick={() => setHttpOpen((o) => !o)}
-              >
-                {t('WiFi')}
-              </button>
-              {httpOpen && (
-                <span className="http-pop">
-                  <input
-                    className="http-host" placeholder={t('device IP')}
-                    value={http.host}
-                    onChange={(e) => http.setHost(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') void http.connect(); }}
-                  />
-                  <button
-                    disabled={http.status === 'connecting' || !http.host.trim()}
-                    onClick={() => void http.connect()}
-                  >
-                    {t(http.status === 'connecting' ? 'Connecting…' : 'Connect')}
-                  </button>
-                </span>
-              )}
-            </span>
-            )}
-          </>
+          <button
+            className={hubOpen ? 'serial-on' : ''}
+            data-tip={t('sync edits to a real StackChan while you sculpt')}
+            onClick={() => setHubOpen((o) => !o)}
+          >
+            {t('Live sculpt')}
+          </button>
         )}
         <input
           ref={fileRef} type="file" accept=".json" hidden
@@ -457,10 +418,9 @@ export default function App() {
 
       {wiz !== null && (
         <WizardBar
-          step={wiz} doc={doc} connected={connected}
-          serialStatus={serial.status} serialOk={serialSupported}
+          step={wiz} doc={doc} connected={connected || httpConnected}
           onStep={(i) => setWiz(Math.min(Math.max(i, 0), WIZ_STEPS.length - 1))}
-          onStart={wizStart} onEngage={engageWiz} onConnect={() => serial.connect()}
+          onStart={wizStart} onEngage={engageWiz} onConnect={() => setHubOpen(true)}
           onShare={share} onSaveDevice={saveToDevice}
           onClose={() => setWiz(null)}
         />
@@ -531,6 +491,13 @@ export default function App() {
 
         <div className="splitter" onPointerDown={onSplitDown} />
         <div className="right" style={{ flexBasis: rightW }}>
+          {hubOpen && (
+            <DeviceHub
+              serial={serial} serialOk={serialSupported} http={http}
+              wifiOk={location.protocol !== 'https:'}
+              onClose={() => setHubOpen(false)}
+            />
+          )}
           <PartPanel
             title={t('Palette')} fields={PALETTE_FIELDS} node={eff} doc={doc} tab={tab}
             pathPrefix="" onEdit={editAbs} onClear={clearField} defaultOpen

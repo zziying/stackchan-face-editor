@@ -32,17 +32,20 @@ export function useDeviceHttp(onError: (msg: string) => void) {
     setStatus('idle');
   }, []);
 
-  const connect = useCallback(async () => {
+  // returns whether the probe reached the device — the caller renders the
+  // failure inline next to the guide instead of a toast
+  const connect = useCallback(async (): Promise<boolean> => {
     const h = hostRef.current.trim();
-    if (!h) return;
+    if (!h) return false;
     setStatus('connecting');
     try {
       const res = await fetch(`http://${h}/status`, { signal: AbortSignal.timeout(4000) });
       if (!res.ok) throw new Error(String(res.status));
       setStatus('connected');
+      return true;
     } catch {
       setStatus('idle');
-      onErrorRef.current('device unreachable');
+      return false;
     }
   }, []);
 

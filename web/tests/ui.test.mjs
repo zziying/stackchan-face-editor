@@ -378,6 +378,24 @@ await page.evaluate(() =>
 d14 = await readDoc();
 assert.notEqual(d14.meta.name, 'Mochi', 'one undo step brings the old face back');
 
+// 15. Live-sculpt hub: header entry, guide, both channels, inline error
+await page.evaluate(() =>
+  [...document.querySelectorAll('header button')].find((b) => b.textContent.trim() === 'Live sculpt').click());
+await page.waitForSelector('.device-hub');
+assert.equal(await page.$eval('.hub-guide', (d) => d.open), false, 'flashing guide collapsed');
+assert.ok(await page.$eval('.hub-guide', (d) => d.textContent.includes('arduino-cli')), 'guide has commands');
+assert.equal((await page.$$('.hub-channel')).length, 2, 'serial + wifi channels on http origin');
+await page.evaluate(() => {
+  const inp = document.querySelector('.device-hub .http-host');
+  Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(inp, '127.0.0.1:1');
+  inp.dispatchEvent(new Event('input', { bubbles: true }));
+});
+await page.evaluate(() =>
+  [...document.querySelectorAll('.device-hub button')].find((b) => b.textContent.trim() === 'Connect').click());
+await page.waitForSelector('.hub-err', { timeout: 8000 });
+await page.evaluate(() => document.querySelector('.device-hub .wiz-close').click());
+assert.equal(await page.$('.device-hub'), null, 'hub closes');
+
 assert.deepEqual(errors, [], `no page errors, got: ${errors}`);
 console.log('ui tests passed');
 await browser.close();

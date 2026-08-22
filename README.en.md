@@ -21,10 +21,12 @@ editing, preset gallery, pixel overlays, URL sharing, and pushing to the device 
 USB via Web Serial (Chromium-based browsers). First visit? Hit the **Wizard** button —
 it walks you through sculpting a living face step by step.
 
-The one exception is **WiFi live-push**: the hosted editor runs on HTTPS, and the
-browser's mixed-content rule won't let it call an HTTP device — so the WiFi button
-only appears on http origins (not seeing it on the hosted editor is expected). For
-the WiFi channel, run the editor locally:
+Connecting a real device starts from the **Live sculpt** panel (top right) — the
+flashing guide and both connect channels live there. The one exception is **WiFi
+live-push**: the hosted editor runs on HTTPS, and the browser's mixed-content rule
+won't let it call an HTTP device — so the panel's WiFi channel only appears on http
+origins (not seeing it on the hosted editor is expected). For the WiFi channel, run
+the editor locally:
 
 ```bash
 cd web && npm install && npm run dev   # WiFi push works on localhost

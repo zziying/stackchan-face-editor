@@ -297,3 +297,28 @@ header [data-tip]:hover::after { bottom: auto; top: calc(100% + 6px); }
   background: var(--bg); border: 1px solid var(--line); border-radius: 6px;
   padding: 8px; font-size: 12px; line-height: 1.45; white-space: pre-wrap;
 }
+
+/* Live-sculpt hub */
+.device-hub { padding: 8px 12px 10px; }
+.hub-head { display: flex; justify-content: space-between; align-items: center; }
+.hub-title { font-weight: 600; }
+.hub-intro { margin: 4px 0 8px; font-size: 13px; color: var(--dim); }
+.hub-guide { margin: 0 0 8px; font-size: 13px; }
+.hub-guide summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
+.hub-guide p, .hub-guide ul { margin: 4px 0; color: var(--dim); }
+.hub-guide ul { padding-left: 18px; }
+.hub-guide pre {
+  overflow-x: auto; font-size: 11px; line-height: 1.5;
+  background: rgba(0,0,0,0.05); border: 1px solid var(--line);
+  border-radius: 6px; padding: 8px; margin: 6px 0;
+}
+.hub-channel { border-top: 1px solid var(--line); padding: 8px 0 2px; }
+.hub-label { font-size: 12px; color: var(--dim); margin-bottom: 6px; }
+.hub-ok { font-size: 13px; color: #4a7a4a; }
+.hub-err {
+  font-size: 12px; color: #a04545; background: rgba(160,69,69,0.08);
+  border: 1px solid rgba(160,69,69,0.25); border-radius: 6px;
+  padding: 6px 8px; margin-top: 6px;
+}
+.hub-dim { font-size: 12px; color: var(--dim); }
+.hub-wifi-row { display: flex; gap: 6px; align-items: center; }

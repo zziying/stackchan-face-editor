@@ -15,7 +15,7 @@
 
 在线版能做的事：实时预览（眨眼呼吸全都动）、六表情编辑、预设脸画廊、像素装饰层、URL 分享，以及通过 Web Serial 用 USB 线直推设备（Chromium 系浏览器）。第一次来建议直接点右上角的「向导」，一步步带你捏出一张活脸。
 
-唯一的例外是 **WiFi 实时推送**：在线版跑在 HTTPS 上，浏览器的 mixed content 规则不允许它调用 HTTP 设备，所以 WiFi 按钮只在 http 环境下出现（在线版看不到它是正常的）。想用 WiFi 通道，就本地跑一份：
+连接真机的入口是右上角的「实时捏脸」面板——烧录指南和连接方式都在里面。唯一的例外是 **WiFi 实时推送**：在线版跑在 HTTPS 上，浏览器的 mixed content 规则不允许它调用 HTTP 设备，所以面板里的 WiFi 一栏只在 http 环境下出现（在线版看不到它是正常的）。想用 WiFi 通道，就本地跑一份：
 
 ```bash
 cd web && npm install && npm run dev   # localhost 上 WiFi 直推可用

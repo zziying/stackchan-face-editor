@@ -9,8 +9,6 @@ interface Props {
   step: number;
   doc: FaceDoc;
   connected: boolean;
-  serialStatus: string;      // 'connecting' dims the connect button
-  serialOk: boolean;         // Web Serial available in this browser/context
   onStep: (i: number) => void;
   onStart: (choice: WizStart) => void;
   onEngage: (kind: 'brows' | 'overlay') => void;
@@ -27,7 +25,7 @@ const START_CHOICES: [WizStart, string][] = [
 ];
 
 export default function WizardBar({
-  step, doc, connected, serialStatus, serialOk,
+  step, doc, connected,
   onStep, onStart, onEngage, onConnect, onShare, onSaveDevice, onClose,
 }: Props) {
   const { t } = useI18n();
@@ -54,9 +52,7 @@ export default function WizardBar({
           <div className="wiz-sub">
             {connected
               ? t('connected — Save to device writes it to flash, blink included')
-              : serialOk
-                ? t('to see it on a real StackChan: USB one running the reference firmware, then connect')
-                : t('pushing to a device needs Chrome on localhost or HTTPS — or export the JSON to its SD card')}
+              : t('to see it on a real StackChan: open Live sculpt — the flashing guide and both connect channels live there')}
           </div>
         )}
       </div>
@@ -91,13 +87,8 @@ export default function WizardBar({
             <button onClick={onShare}>{t('Share')}</button>
             {connected ? (
               <button className="wiz-primary" onClick={onSaveDevice}>{t('Save to device')}</button>
-            ) : serialOk && (
-              <button
-                className="wiz-primary" disabled={serialStatus === 'connecting'}
-                onClick={onConnect}
-              >
-                {t(serialStatus === 'connecting' ? 'Connecting…' : 'Connect device')}
-              </button>
+            ) : (
+              <button className="wiz-primary" onClick={onConnect}>{t('Live sculpt')}</button>
             )}
             <button className={connected ? 'wiz-primary' : ''} onClick={onClose}>{t('finish')}</button>
           </>

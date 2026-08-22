@@ -24,6 +24,28 @@ const ZH: Record<string, string> = {
     '用USB线连接一台跑参考固件的StackChan',
   'Web Serial needs Chrome or Edge': 'Web Serial需要Chrome或Edge',
   WiFi: 'WiFi',
+  'Live sculpt': '实时捏脸',
+  'sync edits to a real StackChan while you sculpt': '边捏边同步到真机上',
+  'push every edit to a real StackChan as you sculpt — the device needs the reference firmware (flash once, swap faces forever)':
+    '每一步编辑实时推到真机上——设备需要跑参考固件（烧录一次，之后换脸永远不用重新编译）',
+  'Flashing guide': '烧录指南',
+  'the reference firmware turns a StackChan into a face this editor drives live; faces load as data, so this is the last flash you need':
+    '参考固件会把 StackChan 变成一张这个编辑器能实时驱动的脸；脸是数据、随时替换，这是你需要的最后一次烧录。',
+  'it replaces the firmware the robot was running — servo moves / voice features of the original are gone':
+    '它会替换掉机器人原来的固件——原固件的舵机动作/语音等功能会消失',
+  'flashing fails while a browser tab holds the serial port — disconnect (or close the editor tab) first':
+    '浏览器占着串口时烧录会失败——先断开连接（或关掉编辑器 tab）再烧',
+  'full guide in the README': 'README 里的完整指南',
+  'USB serial': 'USB 串口',
+  'flashed it — connect device': '已烧好，连接设备',
+  'needs a Chromium browser (Chrome / Edge)': '需要 Chromium 系浏览器（Chrome/Edge）',
+  'connected — edits sync live': '已连接，编辑实时同步',
+  'port opened but the device never replied — is the reference firmware flashed? See the guide above.':
+    '串口打开了，但设备一直没有应答——是不是还没烧参考固件？看看上面的指南。',
+  'WiFi — no cable, needs a firmware with the HTTP face API':
+    'WiFi——不用数据线，需要固件实现 HTTP 换脸 API',
+  "can't reach the device — check the IP, and that it sits on the same network with its HTTP API enabled":
+    '连不上设备——检查 IP 是否正确、是否在同一网络、固件的 HTTP API 是否开启',
   'device IP': '填入设备IP',
   Connect: '连接',
   'live-push over WiFi to a StackChan whose firmware has the HTTP face API':
@@ -145,10 +167,8 @@ const ZH: Record<string, string> = {
     '四帧齐活——看它眨眼说话，然后分享或推上真机',
   'connected — Save to device writes it to flash, blink included':
     '设备已连接——「保存到设备」会把脸写进flash，眨眼说话都带走',
-  'to see it on a real StackChan: USB one running the reference firmware, then connect':
-    '想上真机：用USB连一台刷了参考固件的StackChan，然后点「连接设备」',
-  'pushing to a device needs Chrome on localhost or HTTPS — or export the JSON to its SD card':
-    '直推设备需要Chrome+localhost或HTTPS（Web Serial限制）——也可以导出JSON拷进它的SD卡',
+  'to see it on a real StackChan: open Live sculpt — the flashing guide and both connect channels live there':
+    '想上真机：点「实时捏脸」——烧录指南和两种连接方式都在那个面板里',
   'add brows': '加眉毛',
   'add overlay': '开装饰层',
   back: '上一步',

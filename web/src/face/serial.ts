@@ -23,6 +23,9 @@ export type SerialStatus = 'idle' | 'connecting' | 'connected';
 
 export function useDeviceSerial(onMessage: (line: string) => void) {
   const [status, setStatus] = useState<SerialStatus>('idle');
+  // a port can open fine on a device that doesn't speak our protocol (stock
+  // firmware) — verified flips on the first line it says back (PING reply)
+  const [verified, setVerified] = useState(false);
   const portRef = useRef<PFSerialPort | null>(null);
   const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
   const writerRef = useRef<WritableStreamDefaultWriter<Uint8Array> | null>(null);
@@ -59,6 +62,7 @@ export function useDeviceSerial(onMessage: (line: string) => void) {
     }
     portRef.current = port;
     writerRef.current = port.writable.getWriter();
+    setVerified(false);
     setStatus('connected');
 
     (async () => {
@@ -75,7 +79,7 @@ export function useDeviceSerial(onMessage: (line: string) => void) {
           while ((nl = buf.indexOf('\n')) >= 0) {
             const line = buf.slice(0, nl).replace(/\r$/, '');
             buf = buf.slice(nl + 1);
-            if (line) onMessageRef.current(line);
+            if (line) { setVerified(true); onMessageRef.current(line); }
           }
         }
       } catch { /* unplugged */ }
@@ -86,5 +90,5 @@ export function useDeviceSerial(onMessage: (line: string) => void) {
     send('PING');
   }, [disconnect, send]);
 
-  return { status, connect, disconnect, send };
+  return { status, verified, connect, disconnect, send };
 }
