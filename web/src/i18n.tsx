@@ -26,11 +26,13 @@ const ZH: Record<string, string> = {
   WiFi: 'WiFi',
   'Live sculpt': '实时捏脸',
   'sync edits to a real StackChan while you sculpt': '边捏边同步到真机上',
-  'push every edit to a real StackChan as you sculpt — the device needs the reference firmware (flash once, swap faces forever)':
-    '每一步编辑实时推到真机上——设备需要跑参考固件（烧录一次，之后换脸永远不用重新编译）',
+  'push every edit to a real StackChan as you sculpt — the device needs the reference firmware, or your own firmware with the ParamFace library integrated':
+    '每一步编辑实时推到真机上——设备需要跑参考固件，或集成了 ParamFace 库的自家固件',
   'Flashing guide': '烧录指南',
-  'the reference firmware turns a StackChan into a face this editor drives live; faces load as data, so this is the last flash you need':
-    '参考固件会把 StackChan 变成一张这个编辑器能实时驱动的脸；脸是数据、随时替换，这是你需要的最后一次烧录。',
+  'the reference firmware turns a StackChan into a face this editor drives live; faces load as data, so swapping faces never needs another compile':
+    '参考固件会把 StackChan 变成一张这个编辑器能实时驱动的脸；脸是数据、随时替换，换脸不需要再编译。',
+  'want your sculpted face AND your own firmware? integrate the ParamFace library instead — Path B in the README':
+    '既想要捏好的脸、又想用回自家固件？走集成路线：把 ParamFace 库接进你的固件（README 路线 B）',
   'it replaces the firmware the robot was running — servo moves / voice features of the original are gone':
     '它会替换掉机器人原来的固件——原固件的舵机动作/语音等功能会消失',
   'flashing fails while a browser tab holds the serial port — disconnect (or close the editor tab) first':

@@ -304,7 +304,10 @@ header [data-tip]:hover::after { bottom: auto; top: calc(100% + 6px); }
 .hub-title { font-weight: 600; }
 .hub-intro { margin: 4px 0 8px; font-size: 13px; color: var(--dim); }
 .hub-guide { margin: 0 0 8px; font-size: 13px; }
-.hub-guide summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
+.hub-guide summary { display: block; cursor: pointer; font-weight: 600; padding: 4px 0; list-style: none; }
+.hub-guide summary::-webkit-details-marker { display: none; }
+.hub-guide summary::before { content: '▸ '; color: var(--dim); }
+.hub-guide[open] summary::before { content: '▾ '; }
 .hub-guide p, .hub-guide ul { margin: 4px 0; color: var(--dim); }
 .hub-guide ul { padding-left: 18px; }
 .hub-guide pre {

@@ -28,7 +28,11 @@ interface Props {
 }
 
 export default function DeviceHub({ serial, serialOk, http, wifiOk, onClose }: Props) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  // deep-link straight to Path A of the README the user can read
+  const guideUrl = lang === 'zh'
+    ? `${REPO}#路径-a--烧录参考固件除了-arduino-外无需其他开发环境`
+    : `${REPO}/blob/main/README.en.md#path-a--flash-the-reference-firmware-no-dev-environment-beyond-arduino`;
   const serialConnected = serial.status === 'connected';
   const httpConnected = http.status === 'connected';
 
@@ -54,21 +58,24 @@ export default function DeviceHub({ serial, serialOk, http, wifiOk, onClose }: P
         <button className="wiz-close" onClick={onClose}>✕</button>
       </div>
       <p className="hub-intro">
-        {t('push every edit to a real StackChan as you sculpt — the device needs the reference firmware (flash once, swap faces forever)')}
+        {t('push every edit to a real StackChan as you sculpt — the device needs the reference firmware, or your own firmware with the ParamFace library integrated')}
       </p>
 
       <details className="hub-guide">
         <summary>{t('Flashing guide')}</summary>
-        <p>{t('the reference firmware turns a StackChan into a face this editor drives live; faces load as data, so this is the last flash you need')}</p>
+        <p>{t('the reference firmware turns a StackChan into a face this editor drives live; faces load as data, so swapping faces never needs another compile')}</p>
         <ul>
           <li>{t('it replaces the firmware the robot was running — servo moves / voice features of the original are gone')}</li>
+          <li>{t('want your sculpted face AND your own firmware? integrate the ParamFace library instead — Path B in the README')}</li>
           <li>{t('flashing fails while a browser tab holds the serial port — disconnect (or close the editor tab) first')}</li>
         </ul>
-        <pre>{`arduino-cli compile --fqbn m5stack:esp32:m5stack_cores3 \\
+        <pre>{`git clone https://github.com/zziying/stackchan-face-editor
+cd stackchan-face-editor
+arduino-cli compile --fqbn m5stack:esp32:m5stack_cores3 \\
   --library $PWD/lib/ParamFace firmware/ParamFaceReference/
 arduino-cli upload  --fqbn m5stack:esp32:m5stack_cores3 \\
   --port /dev/cu.usbmodemXXX firmware/ParamFaceReference/`}</pre>
-        <a href={`${REPO}#readme`} target="_blank" rel="noreferrer">
+        <a href={guideUrl} target="_blank" rel="noreferrer">
           {t('full guide in the README')} ↗
         </a>
       </details>
