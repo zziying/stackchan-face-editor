@@ -417,6 +417,10 @@ export default function App() {
                 {t(serial.status === 'connecting' ? 'Connecting…' : 'Connect device')}
               </button>
             </span>
+            {/* an https page can't fetch an http device (mixed content), so
+                the WiFi channel only exists on http origins — don't offer a
+                button that can never succeed on the hosted editor */}
+            {location.protocol !== 'https:' && (
             <span className="http-anchor">
               <button
                 className={httpOpen ? 'serial-on' : ''}
@@ -442,6 +446,7 @@ export default function App() {
                 </span>
               )}
             </span>
+            )}
           </>
         )}
         <input
