@@ -10,6 +10,29 @@ Browser-based parametric face editor for [StackChan](https://github.com/meganeta
 (`lib/ParamFace`), compiled to WASM for the browser and as an Arduino library for the ESP32.
 No codegen, no reimplementation drift.
 
+## Try it now
+
+The editor is hosted on GitHub Pages — open it and start sculpting, nothing to install:
+
+**https://zziying.github.io/stackchan-face-editor/**
+
+The hosted version does everything: live preview (blinks and breathes), six-expression
+editing, preset gallery, pixel overlays, URL sharing, and pushing to the device over
+USB via Web Serial (Chromium-based browsers). First visit? Hit the **Wizard** button —
+it walks you through sculpting a living face step by step.
+
+The one exception is **WiFi live-push**: the hosted editor runs on HTTPS, and the
+browser's mixed-content rule won't let it call an HTTP device. For the WiFi channel,
+run the editor locally:
+
+```bash
+cd web && npm install && npm run dev   # WiFi push works on localhost
+```
+
+Want your own hosted copy? Fork the repo and set Settings → Pages → Source to
+**GitHub Actions** — the deploy workflow (`.github/workflows/deploy-pages.yml`) ships
+with the repo, and every push to main publishes automatically.
+
 ## Layout
 
 ```

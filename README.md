@@ -7,6 +7,22 @@
 
 **保真靠构造（Fidelity by construction）**：编辑器的预览端和硬件设备运行的是**同一个 C++ 渲染器**（`lib/ParamFace`），分别被编译为用于浏览器的 WASM 和用于 ESP32 的 Arduino 库。没有代码生成，也就杜绝了双端实现漂移。
 
+## 🍱 开盖即食
+
+编辑器已托管在 GitHub Pages，打开就能捏，什么都不用装：
+
+**https://zziying.github.io/stackchan-face-editor/**
+
+在线版能做的事：实时预览（眨眼呼吸全都动）、六表情编辑、预设脸画廊、像素装饰层、URL 分享，以及通过 Web Serial 用 USB 线直推设备（Chromium 系浏览器）。第一次来建议直接点右上角的「向导」，一步步带你捏出一张活脸。
+
+唯一的例外是 **WiFi 实时推送**：在线版跑在 HTTPS 上，浏览器的 mixed content 规则不允许它调用 HTTP 设备。想用 WiFi 通道，就本地跑一份：
+
+```bash
+cd web && npm install && npm run dev   # localhost 上 WiFi 直推可用
+```
+
+想部署一份自己的在线版也很简单：fork 本仓库，在 Settings → Pages 里把 Source 设为 **GitHub Actions**——仓库自带部署 workflow（`.github/workflows/deploy-pages.yml`），此后每次 push 到 main 都会自动发布。
+
 ## 📁 目录结构
 
 ```text
