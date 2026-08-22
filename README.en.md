@@ -117,7 +117,9 @@ m5stack-avatar rendering layer.
    personality (intervals, amplitudes) coming from the face.json.
 
 6. **(Optional) Let the editor live-push over WiFi.** If your firmware exposes
-   the keke-style HTTP endpoints — `POST /face` (body = face.json, `?save=1`
+   the same HTTP endpoints as
+   [stackchan-openapi](https://github.com/zziying/stackchan-openapi) —
+   `POST /face` (body = face.json, `?save=1`
    persists), `GET /face?expr=<name>&hold=1` — and answers with
    `Access-Control-Allow-Origin: *`, the editor's **WiFi** button connects
    straight to the device: every edit live-pushes over the network, same feel

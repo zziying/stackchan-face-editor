@@ -83,7 +83,7 @@ arduino-cli upload  --fqbn m5stack:esp32:m5stack_cores3 \
 
 5. **接上嘴巴（口型同步）**：将原本调用 `avatar.setMouthOpenRatio(r)` 的地方替换为：播放音频时调用 `face.setMouthOpenOverride(true, r)`，结束时调用 `face.setMouthOpenOverride(false)`。同理，人脸追踪可用 `setGazeOverride(...)`。而眨眼和视线的闲置动作完全不需要编写代码 —— 动画引擎会自动处理，其性格参数（频率、幅度）均来自 `face.json`。
 
-6. **（可选）允许编辑器通过 WiFi 实时推送**：如果你的固件暴露了 keke 风格的 HTTP 端点 —— `POST /face`（请求体为 face.json，带 `?save=1` 参数可持久化）、`GET /face?expr=<name>&hold=1` —— 并且响应头包含 `Access-Control-Allow-Origin: *`，那么编辑器的 **WiFi** 按钮就可以直连设备：每次编辑都通过网络实时推送，体验与串口通道一致，但摆脱了 USB 数据线的束缚，且任意浏览器均可使用。
+6. **（可选）允许编辑器通过 WiFi 实时推送**：如果你的固件暴露了与 [stackchan-openapi](https://github.com/zziying/stackchan-openapi) 相同的 HTTP 端点 —— `POST /face`（请求体为 face.json，带 `?save=1` 参数可持久化）、`GET /face?expr=<name>&hold=1` —— 并且响应头包含 `Access-Control-Allow-Origin: *`，那么编辑器的 **WiFi** 按钮就可以直连设备：每次编辑都通过网络实时推送，体验与串口通道一致，但摆脱了 USB 数据线的束缚，且任意浏览器均可使用。
 
 这套迁移的完整实例（移除 m5avatar、接入 ParamFace、带 CORS 的 HTTP 换脸、口型同步、以及叠加显示字幕）可参考 [keke_firmware](https://github.com/zziying/stackchan-openapi)。
 
