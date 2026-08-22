@@ -28,10 +28,22 @@ interface Props {
   // undo/redo next to the tools: painting is where reaching for the header
   // buttons hurts most (a stroke = one undo step)
   history?: BoardHistory;
+  bg?: string;                  // face background color; the checker derives from it
 }
 
 const CELL = 16;
-const CHECKER = ['#23272f', '#2b3039'];
+// checker tones follow the face background so the board previews against the
+// color the sprite will actually sit on; the second tone nudges lightness to
+// keep transparency readable
+function checkerTones(bg?: string): [string, string] {
+  if (!bg || !/^#[0-9a-fA-F]{6}$/.test(bg)) return ['#23272f', '#2b3039'];
+  const n = parseInt(bg.slice(1), 16);
+  const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  const lum = 0.299 * ch[0] + 0.587 * ch[1] + 0.114 * ch[2];
+  const d = lum > 140 ? -16 : 16;
+  const alt = ch.map((c) => Math.min(255, Math.max(0, c + d)));
+  return [bg, `#${alt.map((c) => c.toString(16).padStart(2, '0')).join('')}`];
+}
 
 interface SelRect { x: number; y: number; w: number; h: number }
 type Drag =
@@ -63,7 +75,7 @@ function stampRegion(buf: Uint8Array, w: number, float: Uint8Array, r: SelRect) 
     }
 }
 
-export default function PixelBoard({ frame, onion, onStroke, onPalette, history }: Props) {
+export default function PixelBoard({ frame, onion, onStroke, onPalette, history, bg }: Props) {
   const { t } = useI18n();
   const [tool, setTool] = useState<Tool>('pen');
   const [selIdx, setSelIdx] = useState(1);
@@ -88,12 +100,13 @@ export default function PixelBoard({ frame, onion, onStroke, onPalette, history 
     const g = canvas.getContext('2d')!;
     const { w, h, palette } = frame;
     const pixels = strokeRef.current ?? frame.pixels;
+    const checker = checkerTones(bg);
     const half = CELL / 2;
     for (let y = 0; y < h; y++)
       for (let x = 0; x < w; x++) {
         for (let sy = 0; sy < 2; sy++)
           for (let sx = 0; sx < 2; sx++) {
-            g.fillStyle = CHECKER[(x * 2 + sx + y * 2 + sy) % 2];
+            g.fillStyle = checker[(x * 2 + sx + y * 2 + sy) % 2];
             g.fillRect(x * CELL + sx * half, y * CELL + sy * half, half, half);
           }
       }
@@ -156,7 +169,7 @@ export default function PixelBoard({ frame, onion, onStroke, onPalette, history 
       g.strokeRect(rect.x * CELL + 1, rect.y * CELL + 1, rect.w * CELL - 2, rect.h * CELL - 2);
       g.setLineDash([]);
     }
-  }, [frame, onion, onionOn, sel]);
+  }, [frame, onion, onionOn, sel, bg]);
 
   useEffect(() => { strokeRef.current = null; repaint(); }, [repaint]);
 

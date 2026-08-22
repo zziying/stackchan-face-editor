@@ -125,7 +125,7 @@ export default function PixelPartEditor({ target, doc, symLock, showBaseNote, ba
         </div>
       )}
       <PixelBoard
-        frame={frame} onion={other} history={history}
+        frame={frame} onion={other} history={history} bg={doc.palette.background}
         onStroke={(f, key) => commitFrame(f, key && `pixel.${base}.${active}.${key}`)}
         onPalette={(palette) => commitFrame({ ...frame, palette }, `pixel.${base}.${active}.palette`)}
       />
