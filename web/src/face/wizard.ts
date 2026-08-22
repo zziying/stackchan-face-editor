@@ -22,7 +22,7 @@ export interface WizStep {
 }
 
 // start-step choices: what the four frames build on
-export type WizStart = 'fresh' | 'keep';
+export type WizStart = 'fresh' | 'keep' | 'preset';
 
 export const WIZ_STEPS: WizStep[] = [
   {

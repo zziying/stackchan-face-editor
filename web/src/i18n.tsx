@@ -124,6 +124,7 @@ const ZH: Record<string, string> = {
   Start: '起点',
   'pick a starting point for your face': '选一个起点开始捏脸',
   'start fresh': '从头开始',
+  'start from a preset': '从预设脸开始',
   'keep my current face': '保留当前的脸',
   'Open eyes': '睁眼',
   'Closed eyes': '闭眼',

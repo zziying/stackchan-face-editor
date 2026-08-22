@@ -315,6 +315,9 @@ export default function PixelBoard({ frame, onion, onStroke, onPalette, history 
     input.style.left = `${r.left}px`;
     input.style.top = `${r.bottom}px`;
     input.value = current;
+    // flush layout before clicking — in the same task the popover still
+    // anchors to the input's previous position (first open: the corner)
+    void input.offsetTop;
     input.click();
   };
 

@@ -372,7 +372,7 @@ await page.evaluate(() =>
 assert.equal(await page.$('.preset-pop'), null, 'gallery closed after pick');
 let d14 = await readDoc();
 assert.equal(d14.meta.name, 'Mochi', 'preset loaded');
-assert.equal(d14.parts.eyeL.highlight, true, 'preset content applied');
+assert.equal(d14.palette.background, '#181826', 'preset content applied');
 await page.evaluate(() =>
   [...document.querySelectorAll('header button')].find((b) => b.textContent === '↶').click());
 d14 = await readDoc();

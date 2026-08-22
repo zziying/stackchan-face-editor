@@ -22,6 +22,7 @@ interface Props {
 
 const START_CHOICES: [WizStart, string][] = [
   ['fresh', 'start fresh'],
+  ['preset', 'start from a preset'],
   ['keep', 'keep my current face'],
 ];
 

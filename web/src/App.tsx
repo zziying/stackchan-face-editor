@@ -221,6 +221,7 @@ export default function App() {
     initialRef.current = d;
     commit(() => d);
     flash(t('preset loaded'));
+    if (wiz === 0) setWiz(1);
   };
 
   const share = async () => {
@@ -266,8 +267,10 @@ export default function App() {
   };
 
   // start-step choice: what the four frames build on. Replacing the face is
-  // a normal commit, so it stays a single undo step.
+  // a normal commit, so it stays a single undo step. 'preset' opens the
+  // gallery and waits — pickPreset advances the wizard, closing doesn't.
   const wizStart = (choice: WizStart) => {
+    if (choice === 'preset') { setPresetsOpen(true); return; }
     if (choice === 'fresh') commit(() => DEFAULT_FACE);
     setWiz(1);
   };
