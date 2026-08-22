@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "meta": {
+    "name": "Cat",
+    "author": "stackchan-face-editor"
+  },
+  "canvas": {
+    "width": 320,
+    "height": 240
+  },
+  "palette": {
+    "primary": "#FFC533",
+    "secondary": "#FF8C42",
+    "background": "#000000"
+  },
+  "parts": {
+    "eyeL": {
+      "pos": {
+        "x": 228,
+        "y": 98
+      },
+      "shape": "ellipse",
+      "width": 30,
+      "height": 54,
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "highlight": true
+    },
+    "eyeR": {
+      "pos": {
+        "x": 92,
+        "y": 98
+      },
+      "shape": "ellipse",
+      "width": 30,
+      "height": 54,
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "highlight": true
+    },
+    "mouth": {
+      "pos": {
+        "x": 160,
+        "y": 150
+      },
+      "shape": "omega",
+      "minWidth": 52,
+      "maxWidth": 84,
+      "minHeight": 10,
+      "maxHeight": 56
+    }
+  },
+  "animation": {
+    "blink": {
+      "interval": 4.5,
+      "duration": 120
+    },
+    "saccade": {
+      "interval": 2,
+      "amplitude": 0.55
+    },
+    "breath": {
+      "period": 3,
+      "depth": 0.6
+    }
+  },
+  "expressions": {
+    "happy": {
+      "parts": {
+        "eyeL": {
+          "lowerLid": {
+            "cover": 0.5
+          }
+        },
+        "eyeR": {
+          "lowerLid": {
+            "cover": 0.5
+          }
+        }
+      }
+    },
+    "angry": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "angle": -25,
+            "cover": 0.4
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "angle": 25,
+            "cover": 0.4
+          }
+        }
+      }
+    },
+    "sad": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "angle": 16,
+            "cover": 0.35
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "angle": -16,
+            "cover": 0.35
+          }
+        }
+      }
+    },
+    "doubt": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "cover": 0.5
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "cover": 0.05
+          }
+        },
+        "mouth": {
+          "minWidth": -14,
+          "maxWidth": -26
+        }
+      }
+    },
+    "sleepy": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "cover": 0.65
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "cover": 0.65
+          }
+        }
+      },
+      "animation": {
+        "blink": {
+          "interval": 2.5,
+          "duration": 280
+        },
+        "breath": {
+          "depth": 0.4
+        }
+      }
+    }
+  }
+}

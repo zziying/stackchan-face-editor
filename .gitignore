@@ -1,0 +1,8 @@
+node_modules/
+dist/
+spike/
+out_*.ppm
+out_*.png
+pf_test
+.DS_Store
+*.log

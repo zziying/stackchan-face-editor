@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "meta": {
+    "name": "Moon",
+    "author": "stackchan-face-editor"
+  },
+  "canvas": {
+    "width": 320,
+    "height": 240
+  },
+  "palette": {
+    "primary": "#A8E6CF",
+    "secondary": "#FFD3B6",
+    "background": "#101418"
+  },
+  "parts": {
+    "eyeL": {
+      "pos": {
+        "x": 228,
+        "y": 98
+      },
+      "shape": "arc",
+      "width": 54,
+      "height": 30,
+      "curve": 0.8,
+      "thickness": 9,
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      }
+    },
+    "eyeR": {
+      "pos": {
+        "x": 92,
+        "y": 98
+      },
+      "shape": "arc",
+      "width": 54,
+      "height": 30,
+      "curve": 0.8,
+      "thickness": 9,
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      }
+    },
+    "browL": {
+      "pos": {
+        "x": 228,
+        "y": 62
+      },
+      "shape": "arc",
+      "width": 44,
+      "thickness": 6,
+      "curve": 0.5
+    },
+    "browR": {
+      "pos": {
+        "x": 92,
+        "y": 62
+      },
+      "shape": "arc",
+      "width": 44,
+      "thickness": 6,
+      "curve": 0.5
+    },
+    "mouth": {
+      "pos": {
+        "x": 160,
+        "y": 152
+      },
+      "shape": "arc",
+      "minWidth": 46,
+      "maxWidth": 78,
+      "minHeight": 8,
+      "maxHeight": 52,
+      "curve": 0.7
+    }
+  },
+  "animation": {
+    "blink": {
+      "interval": 5,
+      "duration": 160
+    },
+    "saccade": {
+      "interval": 4,
+      "amplitude": 0.25
+    },
+    "breath": {
+      "period": 4.5,
+      "depth": 0.5
+    }
+  },
+  "expressions": {
+    "happy": {
+      "parts": {
+        "eyeL": {
+          "curve": 0.15
+        },
+        "eyeR": {
+          "curve": 0.15
+        },
+        "mouth": {
+          "curve": 0.15
+        }
+      }
+    },
+    "angry": {
+      "parts": {
+        "eyeL": {
+          "curve": -1.4,
+          "upperLid": {
+            "angle": -20,
+            "cover": 0.2
+          }
+        },
+        "eyeR": {
+          "curve": -1.4,
+          "upperLid": {
+            "angle": 20,
+            "cover": 0.2
+          }
+        },
+        "browL": {
+          "curve": -0.5,
+          "pos": {
+            "y": 8
+          }
+        },
+        "browR": {
+          "curve": -0.5,
+          "pos": {
+            "y": 8
+          }
+        },
+        "mouth": {
+          "curve": -1.2
+        }
+      }
+    },
+    "sad": {
+      "parts": {
+        "eyeL": {
+          "curve": -1.6
+        },
+        "eyeR": {
+          "curve": -1.6
+        },
+        "browL": {
+          "curve": -0.9
+        },
+        "browR": {
+          "curve": -0.9
+        },
+        "mouth": {
+          "curve": -1.5,
+          "maxWidth": -20
+        }
+      }
+    },
+    "doubt": {
+      "parts": {
+        "eyeL": {
+          "curve": -0.8,
+          "thickness": 3
+        },
+        "browL": {
+          "pos": {
+            "y": -10
+          }
+        },
+        "mouth": {
+          "minWidth": -12,
+          "maxWidth": -28,
+          "curve": -0.7
+        }
+      }
+    },
+    "sleepy": {
+      "parts": {
+        "eyeL": {
+          "curve": -0.5,
+          "thickness": -2
+        },
+        "eyeR": {
+          "curve": -0.5,
+          "thickness": -2
+        },
+        "browL": {
+          "pos": {
+            "y": 8
+          }
+        },
+        "browR": {
+          "pos": {
+            "y": 8
+          }
+        },
+        "mouth": {
+          "maxWidth": -24,
+          "curve": -0.25
+        }
+      },
+      "animation": {
+        "blink": {
+          "interval": 2.2,
+          "duration": 300
+        },
+        "breath": {
+          "depth": 0.35
+        }
+      }
+    }
+  }
+}

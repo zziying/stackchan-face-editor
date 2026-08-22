@@ -1,0 +1,177 @@
+{
+  "version": 1,
+  "meta": {
+    "name": "Mochi",
+    "author": "stackchan-face-editor"
+  },
+  "canvas": {
+    "width": 320,
+    "height": 240
+  },
+  "palette": {
+    "primary": "#FFF6F0",
+    "secondary": "#FFB6C1",
+    "background": "#181826"
+  },
+  "parts": {
+    "eyeL": {
+      "pos": {
+        "x": 228,
+        "y": 100
+      },
+      "shape": "ellipse",
+      "width": 54,
+      "height": 54,
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "highlight": true
+    },
+    "eyeR": {
+      "pos": {
+        "x": 92,
+        "y": 100
+      },
+      "shape": "ellipse",
+      "width": 54,
+      "height": 54,
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "highlight": true
+    },
+    "mouth": {
+      "pos": {
+        "x": 160,
+        "y": 156
+      },
+      "shape": "arc",
+      "minWidth": 36,
+      "maxWidth": 64,
+      "minHeight": 6,
+      "maxHeight": 48,
+      "curve": 0.6
+    }
+  },
+  "animation": {
+    "blink": {
+      "interval": 3.5,
+      "duration": 140
+    },
+    "saccade": {
+      "interval": 3,
+      "amplitude": 0.35
+    },
+    "breath": {
+      "period": 3.5,
+      "depth": 0.55
+    }
+  },
+  "expressions": {
+    "happy": {
+      "parts": {
+        "eyeL": {
+          "lowerLid": {
+            "cover": 0.55
+          }
+        },
+        "eyeR": {
+          "lowerLid": {
+            "cover": 0.55
+          }
+        }
+      }
+    },
+    "angry": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "angle": -22,
+            "cover": 0.35
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "angle": 22,
+            "cover": 0.35
+          }
+        },
+        "mouth": {
+          "curve": -1.2,
+          "maxWidth": -14
+        }
+      }
+    },
+    "sad": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "angle": 18,
+            "cover": 0.3
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "angle": -18,
+            "cover": 0.3
+          }
+        },
+        "mouth": {
+          "curve": -1.5,
+          "maxWidth": -16
+        }
+      }
+    },
+    "doubt": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "cover": 0.45
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "cover": 0.08
+          }
+        },
+        "mouth": {
+          "minWidth": -10,
+          "maxWidth": -22
+        }
+      }
+    },
+    "sleepy": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "cover": 0.62
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "cover": 0.62
+          }
+        }
+      },
+      "animation": {
+        "blink": {
+          "interval": 2.5,
+          "duration": 260
+        },
+        "breath": {
+          "depth": 0.4
+        }
+      }
+    }
+  }
+}

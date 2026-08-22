@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>StackChan Face Spike — 活的脸</title>
+<style>
+  body { background:#1a1a2e; color:#eee; font-family:system-ui; display:flex; flex-direction:column; align-items:center; gap:16px; padding:24px; }
+  canvas { image-rendering:pixelated; border:2px solid #444; border-radius:8px; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+  button { background:#2d2d44; color:#eee; border:1px solid #555; border-radius:6px; padding:6px 14px; cursor:pointer; }
+  button.on { background:#5d5bd6; }
+  label { font-size:13px; display:flex; align-items:center; gap:6px; }
+  .hint { color:#888; font-size:12px; }
+</style>
+</head>
+<body>
+<h3>StackChan 默认脸 · 未改一行库代码 · 30KB WASM</h3>
+<canvas id="cv" width="320" height="240" style="width:640px;height:480px"></canvas>
+<div class="row" id="exprs"></div>
+<div class="row">
+  <label>嘴 <input type="range" id="mouth" min="0" max="100" value="0"></label>
+  <label><input type="checkbox" id="talk"> 说话demo</label>
+  <label><input type="checkbox" id="blink" checked> 自动眨眼</label>
+  <label><input type="checkbox" id="saccade" checked> saccade</label>
+</div>
+<div class="hint">渲染代码 = 真机固件同一份 C++（m5stack-avatar）</div>
+<script src="avatar.js"></script>
+<script>
+AvatarModule().then(M => {
+  const render = M._render;
+  const w = M._fb_w(), h = M._fb_h();
+  const cv = document.getElementById('cv'), ctx2d = cv.getContext('2d');
+  const img = ctx2d.createImageData(w, h);
+
+  // order matches m5avatar::Expression enum
+  const EXPRS = ['Happy','Angry','Sad','Doubt','Sleepy','Neutral'];
+  let expr = 5;
+  const bar = document.getElementById('exprs');
+  EXPRS.forEach((name, i) => {
+    const b = document.createElement('button');
+    b.textContent = name;
+    if (i === 5) b.classList.add('on');
+    b.onclick = () => { expr = i; [...bar.children].forEach(c => c.classList.remove('on')); b.classList.add('on'); };
+    bar.appendChild(b);
+  });
+
+  // 眨眼状态机：随机间隔触发，~150ms 完成闭合-睁开
+  let eyeOpen = 1, blinkAt = performance.now() + 1800, blinkPhase = -1;
+  // saccade：眼球随机小跳动
+  let gx = 0, gy = 0, sacAt = performance.now() + 1200;
+
+  function tick(t) {
+    const breath = (Math.sin(t / 1800 * Math.PI * 2) + 1) / 2; // 呼吸周期3.6s
+
+    if (document.getElementById('blink').checked) {
+      if (blinkPhase < 0 && t > blinkAt) blinkPhase = t;
+      if (blinkPhase > 0) {
+        const p = (t - blinkPhase) / 150;
+        if (p >= 1) { blinkPhase = -1; eyeOpen = 1; blinkAt = t + 1200 + Math.random() * 3000; }
+        else eyeOpen = p < 0.5 ? 1 - p * 2 : (p - 0.5) * 2;
+      }
+    } else eyeOpen = 1;
+
+    if (document.getElementById('saccade').checked) {
+      if (t > sacAt) { gx = (Math.random() - 0.5) * 1.2; gy = (Math.random() - 0.5) * 0.8; sacAt = t + 600 + Math.random() * 2500; }
+    } else { gx = 0; gy = 0; }
+
+    let mouth = document.getElementById('mouth').value / 100;
+    if (document.getElementById('talk').checked)
+      mouth = Math.max(0, Math.sin(t / 90) * 0.5 + Math.sin(t / 37) * 0.3 + 0.15);
+
+    render(expr, breath, eyeOpen, mouth, gx, gy);
+
+    const fb = M.HEAPU16.subarray(M._fb() >> 1, (M._fb() >> 1) + w * h);
+    const d = img.data;
+    for (let i = 0; i < w * h; i++) {
+      const c = fb[i];
+      d[i*4]   = ((c >> 11) & 0x1F) << 3;
+      d[i*4+1] = ((c >> 5)  & 0x3F) << 2;
+      d[i*4+2] = (c & 0x1F) << 3;
+      d[i*4+3] = 255;
+    }
+    ctx2d.putImageData(img, 0, 0);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+});
+</script>
+</body>
+</html>

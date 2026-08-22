@@ -1,0 +1,261 @@
+{
+  "version": 1,
+  "meta": {
+    "name": "Ke",
+    "author": "keke_firmware"
+  },
+  "canvas": {
+    "width": 320,
+    "height": 240
+  },
+  "palette": {
+    "primary": "#FFFFFF",
+    "secondary": "#FF99CC",
+    "background": "#000000"
+  },
+  "parts": {
+    "eyeL": {
+      "pos": {
+        "x": 230,
+        "y": 93
+      },
+      "shape": "roundRect",
+      "width": 28,
+      "height": 10,
+      "cornerRadius": 0,
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      }
+    },
+    "eyeR": {
+      "pos": {
+        "x": 103,
+        "y": 96
+      },
+      "shape": "roundRect",
+      "width": 28,
+      "height": 10,
+      "cornerRadius": 0,
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      }
+    },
+    "browL": {
+      "pos": {
+        "x": 230,
+        "y": 67
+      },
+      "shape": "rect",
+      "width": 0,
+      "thickness": 2,
+      "angle": 0
+    },
+    "browR": {
+      "pos": {
+        "x": 103,
+        "y": 70
+      },
+      "shape": "rect",
+      "width": 0,
+      "thickness": 2,
+      "angle": 0
+    },
+    "mouth": {
+      "pos": {
+        "x": 163,
+        "y": 148
+      },
+      "shape": "rect",
+      "minWidth": 24,
+      "maxWidth": 42,
+      "minHeight": 2,
+      "maxHeight": 10
+    }
+  },
+  "overlay": {
+    "smooth": false,
+    "expr": {
+      "angry": {
+        "frames": {
+          "open": {
+            "w": 80,
+            "h": 60,
+            "palette": [
+              "#FFFFFF"
+            ],
+            "data": "8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8BEwEfDw8PBwAVAB8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDwcAFQAfDw8PBwETAR8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PBw"
+          }
+        }
+      },
+      "sleepy": {
+        "frames": {
+          "open": {
+            "w": 80,
+            "h": 60,
+            "palette": [
+              "#FFFFFF"
+            ],
+            "data": "8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8ABB8PDw8NAB8PDw8NAB8PDw8NAB8PDw8NBB8PDw8PDw8PDwcDHw8PDw0AHw8PDw0AHw8PDw0DHw8PDw8PDw8PCQIfDw8PDQAfDw8PDQIfDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8AA="
+          }
+        }
+      },
+      "doubt": {
+        "frames": {
+          "open": {
+            "w": 80,
+            "h": 60,
+            "palette": [
+              "#FFFFFF"
+            ],
+            "data": "8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PAQIfDw8PCwASAB8PDw8OAB8PDw8NAB8PDw8NAB8PDw8OAB8PDw8PDw8PDw4AHw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDwsA=="
+          }
+        }
+      }
+    }
+  },
+  "animation": {
+    "blink": {
+      "interval": 4,
+      "duration": 150
+    },
+    "saccade": {
+      "interval": 3,
+      "amplitude": 0.4
+    },
+    "breath": {
+      "period": 3.5,
+      "depth": 0.6
+    }
+  },
+  "expressions": {
+    "happy": {
+      "parts": {
+        "eyeL": {
+          "shape": "arc",
+          "curve": 0.9,
+          "thickness": 3,
+          "width": -4,
+          "height": 12
+        },
+        "eyeR": {
+          "shape": "arc",
+          "curve": 0.9,
+          "thickness": 3,
+          "width": -4,
+          "height": 12
+        },
+        "mouth": {
+          "shape": "arc",
+          "curve": 0.7
+        }
+      }
+    },
+    "angry": {
+      "parts": {
+        "eyeL": {
+          "height": -3
+        },
+        "eyeR": {
+          "height": -3
+        },
+        "browL": {
+          "width": 36,
+          "angle": -29,
+          "pos": {
+            "y": 4
+          }
+        },
+        "browR": {
+          "width": 36,
+          "angle": 29,
+          "pos": {
+            "y": 4
+          }
+        }
+      }
+    },
+    "sad": {
+      "parts": {
+        "browL": {
+          "width": 36,
+          "angle": 24
+        },
+        "browR": {
+          "width": 36,
+          "angle": -24
+        },
+        "mouth": {
+          "shape": "arc",
+          "curve": -0.7
+        }
+      }
+    },
+    "doubt": {
+      "parts": {
+        "eyeL": {
+          "pos": {
+            "y": 2
+          }
+        },
+        "eyeR": {
+          "pos": {
+            "y": -3
+          }
+        },
+        "browL": {
+          "width": 36,
+          "pos": {
+            "y": 3
+          }
+        },
+        "browR": {
+          "width": 36,
+          "angle": -18,
+          "pos": {
+            "y": -5
+          }
+        },
+        "mouth": {
+          "minWidth": -8,
+          "maxWidth": -26
+        }
+      }
+    },
+    "sleepy": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "cover": 0.7
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "cover": 0.7
+          }
+        },
+        "mouth": {
+          "maxWidth": -26
+        }
+      },
+      "animation": {
+        "blink": {
+          "interval": -1,
+          "duration": 100
+        },
+        "breath": {
+          "depth": -0.2
+        }
+      }
+    }
+  }
+}

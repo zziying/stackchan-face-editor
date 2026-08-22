@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "meta": {
+    "name": "Classic",
+    "author": "stackchan-face-editor"
+  },
+  "canvas": {
+    "width": 320,
+    "height": 240
+  },
+  "palette": {
+    "primary": "#FFFFFF",
+    "secondary": "#FF99CC",
+    "background": "#000000"
+  },
+  "parts": {
+    "eyeL": {
+      "pos": {
+        "x": 230,
+        "y": 96
+      },
+      "shape": "ellipse",
+      "width": 32,
+      "height": 32,
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "highlight": false
+    },
+    "eyeR": {
+      "pos": {
+        "x": 90,
+        "y": 93
+      },
+      "shape": "ellipse",
+      "width": 32,
+      "height": 32,
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "highlight": false
+    },
+    "mouth": {
+      "pos": {
+        "x": 163,
+        "y": 148
+      },
+      "shape": "rect",
+      "minWidth": 50,
+      "maxWidth": 90,
+      "minHeight": 4,
+      "maxHeight": 60
+    }
+  },
+  "animation": {
+    "blink": {
+      "interval": 4,
+      "duration": 150
+    },
+    "saccade": {
+      "interval": 3,
+      "amplitude": 0.4
+    },
+    "breath": {
+      "period": 3.5,
+      "depth": 0.6
+    }
+  }
+}

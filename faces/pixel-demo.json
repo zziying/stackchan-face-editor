@@ -1,0 +1,253 @@
+{
+  "version": 1,
+  "meta": {
+    "name": "Pixel Demo",
+    "author": "stackchan-face-editor"
+  },
+  "canvas": {
+    "width": 320,
+    "height": 240
+  },
+  "palette": {
+    "primary": "#FFFFFF",
+    "secondary": "#FF99CC",
+    "background": "#000000"
+  },
+  "parts": {
+    "eyeL": {
+      "pos": {
+        "x": 230,
+        "y": 96
+      },
+      "shape": "pixel",
+      "scale": 3,
+      "frames": {
+        "open": {
+          "w": 16,
+          "h": 16,
+          "palette": [
+            "#FFFFFF",
+            "#222233",
+            "#AEE7FF"
+          ],
+          "data": "8FBBgIFQoTDBICETcRAxAwEiUQBBQkEAMWIxADFiMQAxYjEQMUIxIEEiQTChUIGAQUA="
+        },
+        "closed": {
+          "w": 16,
+          "h": 16,
+          "palette": [
+            "#FFFFFF",
+            "#222233",
+            "#AEE7FF"
+          ],
+          "data": "8PDw8PDw8PAQAZABMCFQIUCRcFHw8PDwQA=="
+        }
+      },
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      }
+    },
+    "eyeR": {
+      "pos": {
+        "x": 90,
+        "y": 96
+      },
+      "shape": "pixel",
+      "scale": 3,
+      "frames": {
+        "open": {
+          "w": 16,
+          "h": 16,
+          "palette": [
+            "#FFFFFF",
+            "#222233",
+            "#AEE7FF"
+          ],
+          "data": "8FBBgIFQoTDBICETcRAxAwEiUQBBQkEAMWIxADFiMQAxYjEQMUIxIEEiQTChUIGAQUA="
+        },
+        "closed": {
+          "w": 16,
+          "h": 16,
+          "palette": [
+            "#FFFFFF",
+            "#222233",
+            "#AEE7FF"
+          ],
+          "data": "8PDw8PDw8PAQAZABMCFQIUCRcFHw8PDwQA=="
+        }
+      },
+      "upperLid": {
+        "angle": 0,
+        "cover": 0
+      },
+      "lowerLid": {
+        "angle": 0,
+        "cover": 0
+      }
+    },
+    "mouth": {
+      "pos": {
+        "x": 163,
+        "y": 148
+      },
+      "shape": "pixel",
+      "scale": 3,
+      "frames": {
+        "open": {
+          "w": 20,
+          "h": 14,
+          "palette": [
+            "#FFFFFF",
+            "#7A2E3F",
+            "#E06377"
+          ],
+          "data": "8ICSgLJg0kDyMPIw8jDyMPIwQlNCQCJzImAScxKAAnMC8IA="
+        },
+        "closed": {
+          "w": 20,
+          "h": 10,
+          "palette": [
+            "#FFFFFF",
+            "#7A2E3F",
+            "#E06377"
+          ],
+          "data": "8PDw0AHQATAhkCFAMVAxcJGwUfDw4A=="
+        }
+      }
+    }
+  },
+  "overlay": {
+    "smooth": true,
+    "frames": {
+      "open": {
+        "w": 80,
+        "h": 60,
+        "palette": [
+          "#FF9EC4"
+        ],
+        "data": "8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8LBB8PDQQfBgYfDwsGHwUGHw8LBh8GBB8PDQQfDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8LA="
+      }
+    },
+    "expr": {
+      "angry": {
+        "frames": {
+          "open": {
+            "w": 80,
+            "h": 60,
+            "palette": [
+              "#E03A3A"
+            ],
+            "data": "8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8MABIAHw8PDwkCEAIfDw8PCQASAB8PDw8PDw8PDwoAEgAfDw8PCQIQAh8PDw8JABIAHw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDQ"
+          }
+        }
+      },
+      "sleepy": {
+        "hidden": true
+      }
+    }
+  },
+  "animation": {
+    "blink": {
+      "interval": 4,
+      "duration": 150
+    },
+    "saccade": {
+      "interval": 3,
+      "amplitude": 0.4
+    },
+    "breath": {
+      "period": 3.5,
+      "depth": 0.6
+    }
+  },
+  "expressions": {
+    "happy": {
+      "parts": {
+        "eyeL": {
+          "lowerLid": {
+            "cover": 0.6
+          }
+        },
+        "eyeR": {
+          "lowerLid": {
+            "cover": 0.6
+          }
+        }
+      }
+    },
+    "angry": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "angle": -22,
+            "cover": 0.4
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "angle": 22,
+            "cover": 0.4
+          }
+        }
+      }
+    },
+    "sad": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "angle": 18,
+            "cover": 0.35
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "angle": -18,
+            "cover": 0.35
+          }
+        }
+      }
+    },
+    "doubt": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "cover": 0.45
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "cover": 0.1
+          }
+        }
+      }
+    },
+    "sleepy": {
+      "parts": {
+        "eyeL": {
+          "upperLid": {
+            "cover": 0.6
+          }
+        },
+        "eyeR": {
+          "upperLid": {
+            "cover": 0.6
+          }
+        }
+      },
+      "animation": {
+        "blink": {
+          "interval": 3,
+          "duration": 250
+        },
+        "breath": {
+          "depth": 0.4
+        }
+      }
+    }
+  }
+}
