@@ -167,4 +167,4 @@ eyelids as a layer over any eye shape, expressions stored as *relative deltas*
 you reshape the base, and animation personality (blink/saccade/breath) lives in
 the schema too.
 
-MIT
+[MIT](LICENSE)

@@ -2,35 +2,32 @@
 
 **中文** | [English](README.en.md)
 
-给 [StackChan](https://github.com/meganetaaan/stack-chan) /
-[m5stack-avatar](https://github.com/meganetaaan/m5stack-avatar) 做的网页版参数化捏脸器——
-捏一张活的脸（会眨眼、会呼吸、会对口型），一条 URL 就能分享，不用编译就能跑上设备。
+基于浏览器的参数化捏脸器，适用于 [StackChan](https://github.com/meganetaaan/stack-chan) /
+[m5stack-avatar](https://github.com/meganetaaan/m5stack-avatar)。它能让你像雕刻一样捏出一张活的脸（会眨眼、会呼吸、会对口型），通过 URL 轻松分享，并在硬件设备上零编译直接运行。
 
-**保真靠构造，不靠模拟**：编辑器预览和设备跑的是*同一份 C++ 渲染器*
-（`lib/ParamFace`），浏览器端编译成 WASM，设备端编译成 Arduino 库。
-没有代码生成，也就不存在两套实现慢慢漂移的问题。
+**保真靠构造（Fidelity by construction）**：编辑器的预览端和硬件设备运行的是**同一个 C++ 渲染器**（`lib/ParamFace`），分别被编译为用于浏览器的 WASM 和用于 ESP32 的 Arduino 库。没有代码生成，也就杜绝了双端实现漂移。
 
-## 目录结构
+## 📁 目录结构
 
-```
-web/       Vite + React 编辑器（WASM 预览、参数面板、表情 tab、URL 分享）
-lib/       ParamFace —— 参数化渲染器 + 动画器（C++，同时面向 WASM 与 Arduino）
-firmware/  参考固件（串口协议 / SD 卡 / flash 加载 face.json）
+```text
+web/       Vite + React 编辑器（WASM 预览、参数面板、表情标签页、URL 分享）
+lib/       ParamFace — 参数化渲染器 + 动画引擎（C++，支持 WASM 与 Arduino 目标平台）
+firmware/  参考固件（串口协议 / SD 卡 / 闪存加载 face.json）
 faces/     官方预设脸（face.json）
-spike/     可行性验证（m5stack-avatar 原样编译成 WASM）
-DESIGN.md  完整决策记录：架构、schema S1-S8
+spike/     可行性验证（m5stack-avatar 原封不动编译为 WASM）
+DESIGN.md  完整决策日志：架构设计与 schema 规范 S1-S8
 ```
 
-## 跑上你的 StackChan
+---
 
-两条路，看你是哪种玩家。
+## 🚀 在你的 StackChan 上运行
 
-### 路线 A —— 烧参考固件（除了 Arduino 不需要任何开发环境）
+提供两条路径，取决于你是哪种玩家。
 
-`firmware/ParamFaceReference/` 是一个极简固件，它唯一的工作就是当一张脸：
-以约 30 fps 渲染 ParamFace，并听懂编辑器的串口协议。
-烧一次，以后换脸永远不用重新编译——可以从编辑器推（Web Serial「推送到设备」）、
-可以用脚本走串口，也可以直接把 `face.json` 丢进 SD 卡。
+### 路径 A — 烧录参考固件（除了 Arduino 外无需其他开发环境）
+
+`firmware/ParamFaceReference/` 是一个极简固件，其唯一职责就是当一张脸：以约 30 fps 的帧率渲染 ParamFace 并解析编辑器的串口协议。
+烧录一次即可，之后无需重新编译即可永久换脸 —— 可以通过编辑器（Web Serial「推送至设备」）、串口监视器的脚本，或者直接将 `face.json` 丢进 SD 卡。
 
 ```bash
 arduino-cli compile --fqbn m5stack:esp32:m5stack_cores3 \
@@ -39,118 +36,95 @@ arduino-cli upload  --fqbn m5stack:esp32:m5stack_cores3 \
   --port /dev/cu.usbmodemXXX firmware/ParamFaceReference/
 ```
 
-开机加载顺序：`SD:/face.json` → flash `/face.json` → 内置默认脸。
-串口协议（按行分隔，用串口监视器手敲也行）：
+启动加载顺序：`SD:/face.json` → 闪存 `/face.json` → 内置默认脸。
+串口协议（换行符分隔，也支持在串口监视器中手动输入）：
 
-| 命令 | 作用 |
+| 命令 | 效果 |
 | --- | --- |
 | `PING` | 回复 `OK PF 1` |
 | `FACE <json>` | 实时应用一份 face.json（仅内存；单行） |
-| `EXPR <0-5\|名字>` | 切换表情（`neutral happy angry sad doubt sleepy`） |
-| `TALK <0..1\|off>` | 外部驱动嘴巴开合（对口型）；`off` 交还给动画器 |
-| `SAVE` | 把最后应用的 json 持久化到 flash（重启不丢） |
-| `STAT` / `REBOOT` | 状态 / 重启 |
+| `EXPR <0-5\|name>` | 切换表情（`neutral happy angry sad doubt sleepy`） |
+| `TALK <0..1\|off>` | 外部驱动嘴巴开合（口型同步）；`off` 将控制权交还给动画引擎 |
+| `SAVE` | 将最后应用的 json 持久化到闪存（重启后不丢失） |
+| `STAT` / `REBOOT` | 状态查询 / 重启 |
 
-想连线都省掉？固件有一个编译期 WiFi 选项（sketch 顶部 `PF_ENABLE_WIFI 1`
-加你的 WiFi 凭证）：打开后它会提供编辑器 **WiFi** 按钮所用的同一套 HTTP 换脸
-API，编辑就通过网络实时推送而不走 USB。前提是编辑器本身跑在普通 HTTP 上
-（localhost 或你自己的 dev server）——HTTPS 托管的编辑器没法调用 HTTP 设备
-（浏览器 mixed content 规则）；那种情况下串口通道和 curl 依然可用。
+**想要完全摆脱数据线？** 该固件提供了一个编译期 WiFi 选项（在 sketch 顶部开启 `PF_ENABLE_WIFI 1` 并填入你的 WiFi 凭证）：开启后它会提供与编辑器 **WiFi** 按钮相同的 HTTP 换脸 API，从而实现通过网络（而非 USB）实时推送修改。这在编辑器本身通过纯 HTTP 提供服务时可用（如 `localhost` 或你自己的开发服务器）；如果编辑器托管在 HTTPS 下，则由于浏览器的「混合内容（mixed content）」规则无法调用 HTTP 设备，此时串口通道和 `curl` 依然可用。
 
-**代价**：参考固件会*替换掉*你 StackChan 上原来的一切——舵机编排、语音功能，
-原固件会的它统统没有。它是一个 demo，也是一份集成参考。如果你的机器人已经
-有一套你喜欢的固件，走路线 B。
+**权衡取舍**：参考固件会**替换**掉你 StackChan 原本运行的一切 —— 舵机编排、语音功能等原固件逻辑将会消失。它主要用作 Demo 和集成参考。如果你的机器人已经有一套满意的固件，请走**路径 B**。
 
-### 路线 B —— 把 ParamFace 集成进你自己的固件（正餐）
+---
 
-大多数 StackChan 玩家跑的是自己的固件。ParamFace 的意义就在于：
-脸从「要重新编译的 C++」变成「随时可换的数据」——舵机、语音管线、HTTP API
-统统保留，只把 m5stack-avatar 的渲染层换掉。
+### 路径 B — 将 ParamFace 集成到你自己的固件中（正餐）
 
-1. **加库**：把构建指向 `lib/ParamFace`
-   （`arduino-cli compile --library path/to/lib/ParamFace ...`，或拷进你的
-   Arduino libraries 目录）。除 M5GFX 外零依赖；ArduinoJson 已 vendor 在库里。
+绝大多数 StackChan 玩家都在运行自己的定制固件。ParamFace 的核心价值在于：**让脸不再是需要重新编译的 C++ 代码，而变成可以随时替换的数据**。保留你的舵机控制、语音管线、HTTP API —— 仅替换 m5stack-avatar 的渲染层。
 
-2. **帧循环归你管。** ParamFace 没有后台任务——由你来泵：
+1. **引入库**：将你的构建指向 `lib/ParamFace`（例如 `arduino-cli compile --library path/to/lib/ParamFace ...`，或者将其复制到你的 Arduino libraries 目录下）。除 M5GFX 外无其他外部依赖，ArduinoJson 已 vendor 在库内。
+
+2. **掌控帧循环**。ParamFace 没有后台任务 —— 需要你主动驱动它：
 
    ```cpp
    #include <ParamFace.h>
    paramface::ParamFace face;
    M5Canvas canvas(&M5.Display);
 
-   // setup(): canvas.setColorDepth(16); canvas.createSprite(320, 240);
-   //          face.load(jsonString);
-   // 每 ~33 ms：
-   face.tick(dtMs);          // 眨眼 / 视线扫视 / 呼吸状态机
-   face.render(&canvas);     // 整帧重绘，按 canvas 尺寸缩放
+   // setup() 中: canvas.setColorDepth(16); canvas.createSprite(320, 240);
+   //           face.load(jsonString);
+   // 每隔约 33 毫秒:
+   face.tick(dtMs);        // 眨眼 / 扫视 / 呼吸状态机
+   face.render(&canvas);   // 全帧重绘，缩放至 canvas
    canvas.pushSprite(0, 0);
    ```
 
-   如果你的固件有长阻塞的 handler（音频流、录音），把泵放进独立的 FreeRTOS
-   task 里，脸就能一直动——注意给 `face.load()` 和 tick/render 之间加互斥锁，
-   因为 `load()` 会重建整张脸，而 `render()` 正在读它。
+   如果你的固件包含长时间阻塞的处理逻辑（如音频流传输、录音），请把这个循环放进独立的 FreeRTOS 任务中，脸就能一直动；同时由于 `face.load()` 会重建整张脸，而 `render()` 正在读取它，请在 `face.load()` 与 tick/render 之间加互斥锁（mutex）。
 
-3. **把脸当数据加载。** 开机从 SD/flash 读，内置默认脸兜底；运行时通过你固件
-   已有的任何通道接收新 json（HTTP POST、MQTT、串口——`face.load()` 不挑）。
-   解析失败的脸不会生效，上一张脸保持不变，并通过 `face.lastError()` 报错。
+3. **把脸当数据加载**：开机从 SD 卡或闪存读取，内置默认脸兜底；支持在运行时通过固件现有的任意通道（HTTP POST、MQTT、串口 —— `face.load()` 不挑来源）接收新的 json。解析失败的 json 不会生效，上一张脸保持不变，并通过 `face.lastError()` 报告错误。
 
-4. **映射你的表情。** ParamFace 的六个表情
-   （`Neutral Happy Angry Sad Doubt Sleepy`）与 m5stack-avatar 的标准表情集
-   一一对应，现有表情逻辑改个枚举名就能平移。schema 装不下的自家特色表情，
-   可以在 `face.render()` *之后*直接画在 canvas 上——那一帧归你。
+4. **映射你的表情**：ParamFace 的六种表情（`Neutral`、`Happy`、`Angry`、`Sad`、`Doubt`、`Sleepy`）与 m5stack-avatar 的标准表情集一一对应，因此只需重命名枚举即可平移现有的表情逻辑。schema 装不下的自家特色表情可以在 `face.render()` **之后**直接绘制在画布上 —— 那一帧的控制权完全在你手中。
 
-5. **接上嘴巴（对口型）。** 原来调 `avatar.setMouthOpenRatio(r)` 的地方，改成
-   放音频时调 `face.setMouthOpenOverride(true, r)`，播完调
-   `face.setMouthOpenOverride(false)`。人脸追踪用 `setGazeOverride(...)`，
-   同一个套路。眨眼和视线的 idle 动作一行代码都不用写——动画器全权负责，
-   性格参数（间隔、幅度）来自 face.json。
+5. **接上嘴巴（口型同步）**：将原本调用 `avatar.setMouthOpenRatio(r)` 的地方替换为：播放音频时调用 `face.setMouthOpenOverride(true, r)`，结束时调用 `face.setMouthOpenOverride(false)`。同理，人脸追踪可用 `setGazeOverride(...)`。而眨眼和视线的闲置动作完全不需要编写代码 —— 动画引擎会自动处理，其性格参数（频率、幅度）均来自 `face.json`。
 
-6. **（可选）让编辑器通过 WiFi 实时推送。** 如果你的固件暴露 keke 风格的
-   HTTP 端点——`POST /face`（body = face.json，`?save=1` 持久化）、
-   `GET /face?expr=<名字>&hold=1`——并带上
-   `Access-Control-Allow-Origin: *` 响应头，编辑器的 **WiFi** 按钮就能直连
-   设备：每次编辑都通过网络实时推送，手感和串口通道一样，但不用 USB 线，
-   任何浏览器都行。
+6. **（可选）允许编辑器通过 WiFi 实时推送**：如果你的固件暴露了 keke 风格的 HTTP 端点 —— `POST /face`（请求体为 face.json，带 `?save=1` 参数可持久化）、`GET /face?expr=<name>&hold=1` —— 并且响应头包含 `Access-Control-Allow-Origin: *`，那么编辑器的 **WiFi** 按钮就可以直连设备：每次编辑都通过网络实时推送，体验与串口通道一致，但摆脱了 USB 数据线的束缚，且任意浏览器均可使用。
 
-这套迁移的完整实例（摘掉 m5avatar、装上 ParamFace、带 CORS 的 HTTP 换脸、
-对口型、字幕叠加层）在
-[keke_firmware](https://github.com/zziying/stackchan-openapi)。
+这套迁移的完整实例（移除 m5avatar、接入 ParamFace、带 CORS 的 HTTP 换脸、口型同步、以及叠加显示字幕）可参考 [keke_firmware](https://github.com/zziying/stackchan-openapi)。
 
-## FAQ
+---
 
-**哪些浏览器能推送到设备？** Web Serial 是 Chromium 的 API，不是 Chrome
-独占：Chrome、Edge、Arc、Brave、Opera 以及大多数 Chromium 内核浏览器都行
-（360、QQ 浏览器这类国产壳通常在「极速/blink」模式下可用）。连接按钮是亮的
-就没问题。Firefox、Safari 和手机浏览器连不上设备——但编辑器本身照常能用，
-包括 URL 分享。
+## ❓ 常见问题（FAQ）
 
-**完全没有设备能玩吗？** 能——编辑器的预览用的就是同一份 C++ 渲染器编译成的
-WASM，脸用 URL 分享。
+**哪些浏览器支持向设备推送？**
+Web Serial 是 Chromium 系 API，并不是 Chrome 独占：Chrome、Edge、Arc、Brave、Opera 及大部分基于 Chromium 的浏览器均可（国产双核浏览器如 360/QQ 浏览器通常在「极速/Blink」模式下可用）。只要连接按钮是亮的，就可以正常使用。Firefox、Safari 以及移动端浏览器无法连接设备 —— 但编辑器本身的各项功能（包括 URL 分享）依然可以在这些浏览器上运行。
 
-**为什么我的脸在设备上和浏览器里长得一模一样？** 这正是设计目标。
-同一个渲染器、同一个动画器、同一份 json。
+**完全没有实体设备能玩吗？**
+能 —— 编辑器的预览用的就是同一份 C++ 渲染器编译成的 WASM，捏好的脸通过 URL 分享。
 
-## 开发
+**为什么我的脸在设备上和浏览器里看起来一模一样？**
+这正是本项目的核心目标。相同的渲染器，相同的动画引擎，相同的 json。
+
+---
+
+## 🛠️ 开发与构建
 
 ```bash
-# 编辑器
+# 启动编辑器前端
 cd web && npm install && npm run dev
 
-# 改过 lib/ 之后重建 WASM（需要 emscripten）
+# 修改 lib/ 之后重新编译 WASM（需要安装 emscripten）
 ./lib/ParamFace/build_wasm.sh
 
-# native 渲染验证（逐表情输出 PPM 帧）
+# 原生渲染验证（为每个表情导出 PPM 帧）
 cd lib/ParamFace/test
 c++ -O2 -std=c++17 -I../host -I../vendor -I../src ../src/*.cpp main.cpp -o pf_test && ./pf_test
 
-# 逻辑测试
+# 运行逻辑测试
 cd web && npx esbuild tests/editDoc.test.ts --bundle --format=esm --platform=node | node --input-type=module
 ```
 
-## face.json
+## 📄 关于 face.json
 
-Schema v1——完整规范见 DESIGN.md。核心思想：左右部件显式分开；眼睑是叠在
-任意眼型之上的一层；表情存成*相对偏移*（数值相加、枚举替换），所以你重塑
-基础脸之后六个表情照样全部成立；动画性格（眨眼/扫视/呼吸）也住在 schema 里。
+Schema v1 —— 完整规范见 `DESIGN.md`。核心理念：左右部件显式分开；眼睑作为一层覆盖在任意眼型之上；表情以**相对偏移（relative deltas）**的形式存储（数值相加、枚举替换），因此当你重塑基础脸型时，六种表情依然全部成立；动画性格参数（眨眼/扫视/呼吸）也一并纳入 schema 管理。
 
-MIT
+---
+
+## 许可证
+
+本项目基于 [MIT License](LICENSE) 开源。
