@@ -12,7 +12,7 @@ const ZH: Record<string, string> = {
   New: '新建',
   'start a new face? the current one will be replaced':
     '开一张新脸？当前这张会被替换（想留的话先导出）',
-  'new face started': '已开新脸',
+  'new face started — undo brings the old one back': '已开新脸——撤销可找回旧脸',
   Import: '导入',
   Export: '导出',
   Share: '分享',
@@ -183,7 +183,7 @@ const ZH: Record<string, string> = {
   Presets: '预设脸',
   'preset loaded': '已载入预设',
   'broken share link — showing your saved face': '分享链接已损坏，先显示你本地的脸',
-  imported: '已导入',
+  'imported — undo brings the old face back': '已导入——撤销可找回旧脸',
   'saved to device': '已保存到设备',
   'import failed': '导入失败',
   'loading WASM…': '加载WASM中…',

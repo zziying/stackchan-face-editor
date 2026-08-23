@@ -198,8 +198,10 @@ export default function App() {
         const d = JSON.parse(text);
         if (d.version !== 1) throw new Error('unsupported version');
         initialRef.current = d;
-        reset(d);
-        flash(t('imported'));
+        // a commit, not a reset: replacing the doc mid-session must stay one
+        // undo away (a sculpted face died to a careless New once — 8/22)
+        commit(() => d);
+        flash(t('imported — undo brings the old face back'));
       } catch (e) {
         flash(`${t('import failed')}: ${(e as Error).message}`);
       }
@@ -211,8 +213,8 @@ export default function App() {
     localStorage.removeItem('pf-doc');
     history.replaceState(null, '', location.pathname);  // drop any share hash
     initialRef.current = DEFAULT_FACE;
-    reset(DEFAULT_FACE);
-    flash(t('new face started'));
+    commit(() => DEFAULT_FACE);
+    flash(t('new face started — undo brings the old one back'));
   };
 
   // Loading a preset is a plain commit — one undo step brings the old face
