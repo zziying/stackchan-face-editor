@@ -255,6 +255,12 @@ assert.equal(d7d.expressions.sad.parts.eyeL.frames.open.data,
   d7d.parts.eyeL.frames.open.data, 'own frames seeded from a base copy');
 assert.ok(d7d.expressions.sad.parts.eyeR.frames.open.data.length > 0,
   'sym lock seeded the partner');
+// the fixture's sad squints via an upperLid delta: owning frames clears it
+// so the board and the preview show the same pixels
+assert.equal(d7d.expressions.sad.parts.eyeL.upperLid, undefined,
+  'owning frames cleared the lid delta');
+assert.equal(d7d.expressions.sad.parts.eyeR.upperLid, undefined,
+  'lid delta cleared on the partner too');
 
 // 8. pixel board (back on the first page): switch Eye L to pixel, paint one
 //    cell, doc gains frames.open; the whole stroke is a single undo step

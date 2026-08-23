@@ -306,6 +306,11 @@ export default function App() {
         const p = `expressions.${tab}.parts.${k}.frames`;
         if (m === 'inherit') next = deletePath(next, p);
         else if (!getPath(next, p)) {
+          // lid deltas were the pre-own-frames way to reshape an expression's
+          // eye; left stacked on an own frame they invisibly carve it up and
+          // read as "wrong frame shown" (8/22), so owning resets them to base
+          next = deletePath(next, `expressions.${tab}.parts.${k}.upperLid`);
+          next = deletePath(next, `expressions.${tab}.parts.${k}.lowerLid`);
           const bf = getPath(next, `parts.${k}.frames`);
           next = setPath(next, p, bf ? structuredClone(bf) : {});
         }
