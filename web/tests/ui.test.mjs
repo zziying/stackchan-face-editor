@@ -217,6 +217,45 @@ await page2.evaluate(() => {
 const d7c = await readDoc2();
 assert.equal(d7c.overlay.expr.happy.hidden, true, 'hidden mode landed in doc');
 
+// 7d. per-expression part frames (v3): the fixture gives happy own golden
+//     eye frames; the inherit/own buttons reflect and edit them, and the
+//     symmetry lock keeps both eyes paired
+const countGold = () => page2.evaluate(() => {
+  const c = document.querySelector('.preview canvas');
+  const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+  let gold = 0;
+  for (let i = 0; i < d.length; i += 4)
+    if (d[i] > 200 && d[i + 1] > 150 && d[i + 1] < 240 && d[i + 2] < 90) gold++;
+  return gold;
+});
+const eyeFrameMode = (action) => page2.evaluate((act) => {
+  const panel = [...document.querySelectorAll('.panel')]
+    .find((p) => p.querySelector('summary')?.textContent.trim().startsWith('Eye L'));
+  panel.open = true;
+  if (act === 'read')
+    return panel.querySelector('.part-frame-mode .mini.active')?.textContent;
+  [...panel.querySelectorAll('.part-frame-mode .mini')]
+    .find((b) => b.textContent === act).click();
+}, action);
+// still on the happy tab from 7c
+await new Promise((res) => setTimeout(res, 200));
+assert.ok(await countGold() > 20, `happy renders its own golden eye frames, got ${await countGold()}`);
+assert.equal(await eyeFrameMode('read'), 'own frames', 'happy eye board sits on own frames');
+await eyeFrameMode('inherit base');
+await new Promise((res) => setTimeout(res, 200));
+assert.ok(await countGold() < 20, 'inherit base dropped the own frames');
+let d7d = await readDoc2();
+assert.equal(d7d.expressions?.happy?.parts?.eyeL?.frames, undefined, 'own frames removed from doc');
+assert.equal(d7d.expressions?.happy?.parts?.eyeR?.frames, undefined, 'sym lock cleared the partner too');
+// own on a clean expression seeds a copy of the base pair for both sides
+await gotoTab('sad');
+await eyeFrameMode('own frames');
+d7d = await readDoc2();
+assert.equal(d7d.expressions.sad.parts.eyeL.frames.open.data,
+  d7d.parts.eyeL.frames.open.data, 'own frames seeded from a base copy');
+assert.ok(d7d.expressions.sad.parts.eyeR.frames.open.data.length > 0,
+  'sym lock seeded the partner');
+
 // 8. pixel board (back on the first page): switch Eye L to pixel, paint one
 //    cell, doc gains frames.open; the whole stroke is a single undo step
 let r8 = await row('Eye L', 'Shape');

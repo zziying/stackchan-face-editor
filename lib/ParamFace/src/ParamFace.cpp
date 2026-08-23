@@ -73,10 +73,13 @@ static void freeFrame(SpriteFrame* f) {
 }
 
 static void freeSpriteSet(SpriteSet* s) {
-  freeFrame(&s->eyeL[0]); freeFrame(&s->eyeL[1]);
-  freeFrame(&s->eyeR[0]); freeFrame(&s->eyeR[1]);
-  freeFrame(&s->mouth[0]); freeFrame(&s->mouth[1]);
-  freeFrame(&s->browL); freeFrame(&s->browR);
+  PartFrames* tables[] = {s->eyeL, s->eyeR, s->mouth, s->browL, s->browR};
+  for (PartFrames* t : tables) {
+    for (int i = 0; i < kExpressionCount; i++) {
+      freeFrame(&t[i].f[0]);
+      freeFrame(&t[i].f[1]);
+    }
+  }
   freeFrame(&s->overlay);
   for (int i = 0; i < kExpressionCount; i++) {
     freeFrame(&s->overlayExpr[i]);
@@ -128,23 +131,35 @@ static const char* parseSpriteFrame(JsonObjectConst o, SpriteFrame* out,
   return nullptr;
 }
 
-// Sprites are read from the base parts only (P5: deltas can't swap frames).
-// Writes the failing slot name + reason into err on failure.
+// Sprite pixels never ride the delta merge (P5). Base frames come from
+// parts.<key>.frames; per-expression own pairs come straight from
+// expressions.<name>.parts.<key>.frames (the same node that carries the
+// vector delta — the merge also copies frames around, but nothing reads
+// them from the merged DOM). Writes the failing slot name + reason on error.
 static bool parseSprites(JsonObjectConst root, SpriteSet* s, char* err, int errCap) {
-  struct Slot { const char* part; const char* frame; SpriteFrame* out; };
-  JsonObjectConst parts = root["parts"];
+  struct Slot { const char* part; const char* frame; int fi; PartFrames* table; };
   const Slot slots[] = {
-      {"eyeL", "open", &s->eyeL[0]},  {"eyeL", "closed", &s->eyeL[1]},
-      {"eyeR", "open", &s->eyeR[0]},  {"eyeR", "closed", &s->eyeR[1]},
-      {"mouth", "open", &s->mouth[0]}, {"mouth", "closed", &s->mouth[1]},
-      {"browL", "open", &s->browL},   {"browR", "open", &s->browR},
+      {"eyeL", "open", 0, s->eyeL},  {"eyeL", "closed", 1, s->eyeL},
+      {"eyeR", "open", 0, s->eyeR},  {"eyeR", "closed", 1, s->eyeR},
+      {"mouth", "open", 0, s->mouth}, {"mouth", "closed", 1, s->mouth},
+      {"browL", "open", 0, s->browL}, {"browR", "open", 0, s->browR},
   };
-  for (const Slot& sl : slots) {
-    const char* reason =
-        parseSpriteFrame(parts[sl.part]["frames"][sl.frame], sl.out);
-    if (reason) {
-      snprintf(err, errCap, "sprite %s/%s: %s", sl.part, sl.frame, reason);
-      return false;
+  JsonObjectConst exprs = root["expressions"];
+  for (int ei = 0; ei < kExpressionCount; ei++) {
+    JsonObjectConst parts =
+        ei == 0 ? root["parts"].as<JsonObjectConst>()
+                : exprs[expressionKey(static_cast<Expression>(ei))]["parts"]
+                      .as<JsonObjectConst>();
+    if (parts.isNull()) continue;
+    for (const Slot& sl : slots) {
+      const char* reason =
+          parseSpriteFrame(parts[sl.part]["frames"][sl.frame], &sl.table[ei].f[sl.fi]);
+      if (reason) {
+        snprintf(err, errCap, "sprite %s%s%s/%s: %s",
+                 ei ? expressionKey(static_cast<Expression>(ei)) : "", ei ? "/" : "",
+                 sl.part, sl.frame, reason);
+        return false;
+      }
     }
   }
   // P6v2: overlay grid (up to 80x60) maps 1:1 onto the design canvas.
@@ -327,9 +342,12 @@ bool ParamFace::load(const char* json) {
     return false;
   }
 
-  SpriteSet stagedSprites;
-  if (!parseSprites(root, &stagedSprites, error_, sizeof(error_))) {
-    freeSpriteSet(&stagedSprites);
+  // heap, not stack: the per-expression tables put SpriteSet near 3KB,
+  // too fat for the device task stack
+  SpriteSet* stagedSprites = new SpriteSet();
+  if (!parseSprites(root, stagedSprites, error_, sizeof(error_))) {
+    freeSpriteSet(stagedSprites);
+    delete stagedSprites;
     return false;
   }
 
@@ -354,7 +372,8 @@ bool ParamFace::load(const char* json) {
 
   for (int i = 0; i < kExpressionCount; i++) faces_[i] = staged[i];
   freeSpriteSet(&sprites_);
-  sprites_ = stagedSprites;  // pointer handoff; stagedSprites goes out of scope
+  sprites_ = *stagedSprites;  // shallow copy hands over pixel ownership
+  delete stagedSprites;       // frames are PODs, so this frees only the shell
   if (!loaded_) animator_.reset();
   loaded_ = true;
   error_[0] = '\0';

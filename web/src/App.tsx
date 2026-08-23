@@ -290,16 +290,60 @@ export default function App() {
     });
   };
 
+  // v3 per-expression part frames: on an expression tab each pixel part
+  // offers inherit/own. Own seeds a copy of the whole base pair (open +
+  // closed, the 8/22 decision) so the board never starts blank; inherit
+  // deletes it — deletePath prunes empty shells so the tab dot stays honest.
+  const partFrameMode = (key: PartKey): 'inherit' | 'own' =>
+    tab !== 'base' && getPath(doc, `expressions.${tab}.parts.${key}.frames`)
+      ? 'own' : 'inherit';
+  const setPartFrameMode = (key: PartKey, m: 'inherit' | 'own') =>
+    commit((d) => {
+      const pair = MIRROR_PAIR[key];
+      const keys = symLock && pair ? [key, pair] : [key];
+      let next = d;
+      for (const k of keys) {
+        const p = `expressions.${tab}.parts.${k}.frames`;
+        if (m === 'inherit') next = deletePath(next, p);
+        else if (!getPath(next, p)) {
+          const bf = getPath(next, `parts.${k}.frames`);
+          next = setPath(next, p, bf ? structuredClone(bf) : {});
+        }
+      }
+      return next;
+    });
+
   // pixel-skin board under a part's fields when its shape is pixel
-  const pixelExtra = (key: PartKey) =>
-    parts[key]?.shape === 'pixel' ? (
-      <PixelPartEditor
-        target={key} doc={doc} symLock={symLock}
-        showBaseNote={tab !== 'base'} commit={commit}
-        frameOverride={wizStep?.target === key ? wizStep.frame : undefined}
-        history={{ undo, redo, canUndo, canRedo }}
-      />
-    ) : undefined;
+  const pixelExtra = (key: PartKey) => {
+    if (parts[key]?.shape !== 'pixel') return undefined;
+    const mode = partFrameMode(key);
+    const own = mode === 'own';
+    const pair = MIRROR_PAIR[key];
+    return (
+      <>
+        {tab !== 'base' && (
+          <div className="frame-tabs part-frame-mode">
+            {([['inherit', 'inherit base'], ['own', 'own frames']] as const).map(([m, label]) => (
+              <button
+                key={m} className={`mini ${mode === m ? 'active' : ''}`}
+                onClick={() => setPartFrameMode(key, m)}
+              >
+                {t(label)}
+              </button>
+            ))}
+          </div>
+        )}
+        <PixelPartEditor
+          target={key} doc={doc} symLock={symLock}
+          basePath={own ? `expressions.${tab}.parts.${key}` : undefined}
+          mirrorBase={own && pair ? `expressions.${tab}.parts.${pair}` : undefined}
+          showBaseNote={tab !== 'base' && !own} commit={commit}
+          frameOverride={wizStep?.target === key ? wizStep.frame : undefined}
+          history={{ undo, redo, canUndo, canRedo }}
+        />
+      </>
+    );
+  };
 
   const toggleOverlay = (on: boolean) =>
     commit((d) => (on ? setPath(d, 'overlay', {}) : deletePath(d, 'overlay')));

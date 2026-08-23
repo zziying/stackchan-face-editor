@@ -184,6 +184,13 @@ void drawSpriteFrame(M5Canvas* g, const SpriteFrame& f, float cx, float cy,
   }
 }
 
+// Per-expression pair selection: an expression slot with any present frame
+// replaces the base pair wholesale; otherwise inherit the base ([0]).
+const SpriteFrame* framesFor(const PartFrames table[], Expression e) {
+  const int ei = static_cast<int>(e);
+  return (ei > 0 && table[ei].present()) ? table[ei].f : table[0].f;
+}
+
 // Keyframe selection (P1/P4): want open or closed, fall back to whichever
 // frame exists; null when the part has no sprite at all (then the caller
 // falls back to its vector shape, S2 spirit).
@@ -356,11 +363,12 @@ void ParamFace::render(M5Canvas* dst) {
   xf.offY = (dst->height() - f.canvasH * xf.scale) / 2;
 
   dst->fillSprite(rgb565(f.palette.background));
-  drawEye(dst, f.eyeL, f.palette, sprites_.eyeL, driven_.eyeOpenL, driven_.gazeH, driven_.gazeV, xf);
-  drawEye(dst, f.eyeR, f.palette, sprites_.eyeR, driven_.eyeOpenR, driven_.gazeH, driven_.gazeV, xf);
-  drawBrow(dst, f.browL, f.palette, sprites_.browL, xf);
-  drawBrow(dst, f.browR, f.palette, sprites_.browR, xf);
-  drawMouth(dst, f.mouth, f.palette, sprites_.mouth, driven_.mouthOpen, driven_.breath, xf);
+  // per-expression part frames: framesFor picks the own pair or the base one
+  drawEye(dst, f.eyeL, f.palette, framesFor(sprites_.eyeL, expr_), driven_.eyeOpenL, driven_.gazeH, driven_.gazeV, xf);
+  drawEye(dst, f.eyeR, f.palette, framesFor(sprites_.eyeR, expr_), driven_.eyeOpenR, driven_.gazeH, driven_.gazeV, xf);
+  drawBrow(dst, f.browL, f.palette, framesFor(sprites_.browL, expr_)[0], xf);
+  drawBrow(dst, f.browR, f.palette, framesFor(sprites_.browR, expr_)[0], xf);
+  drawMouth(dst, f.mouth, f.palette, framesFor(sprites_.mouth, expr_), driven_.mouthOpen, driven_.breath, xf);
   // P6v2: the overlay grid maps 1:1 onto the design canvas (uniform fit,
   // centered); smoothing was pre-expanded at load, so smooth=false here.
   // v2.1: the current expression may hide the overlay or swap in its own frame.

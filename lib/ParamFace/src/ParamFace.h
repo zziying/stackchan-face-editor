@@ -42,11 +42,21 @@ struct SpriteFrame {
 // frame, `hidden:true` suppresses it, an own frame replaces it wholesale.
 enum class OverlayMode : uint8_t { Inherit, Hidden, Own };
 
-// Sprites live outside FaceParams: expression deltas never touch them (P5),
-// so one decoded set serves all six precomputed faces. [0]=open, [1]=closed.
+// One part's keyframe pair. [0]=open, [1]=closed (brows only use [0]).
+struct PartFrames {
+  SpriteFrame f[2];
+  bool present() const { return f[0].present() || f[1].present(); }
+};
+
+// Sprites live outside FaceParams: expression deltas never move pixels via
+// the merge (P5). Each part carries a per-expression table instead: slot [0]
+// (Neutral) is the base pair, slots 1..5 hold own pairs parsed from
+// expressions.<name>.parts.<key>.frames — a slot with any present frame
+// replaces the whole pair, an empty slot inherits the base one.
 struct SpriteSet {
-  SpriteFrame eyeL[2], eyeR[2], mouth[2];
-  SpriteFrame browL, browR;
+  PartFrames eyeL[kExpressionCount], eyeR[kExpressionCount];
+  PartFrames mouth[kExpressionCount];
+  PartFrames browL[kExpressionCount], browR[kExpressionCount];
   // Top-level static layer (P6v2): its grid (up to 80x60) maps 1:1 onto the
   // whole design canvas (uniform fit, centered) — no pos, no scale. Smoothing
   // is applied at load time (the set is immutable), so render pays nothing.

@@ -169,13 +169,27 @@
     "happy": {
       "parts": {
         "eyeL": {
-          "lowerLid": {
-            "cover": 0.6
+          "frames": {
+            "open": {
+              "w": 16,
+              "h": 16,
+              "palette": [
+                "#FFD700"
+              ],
+              "data": "8PDw8PDwUDGgUYBxYCEwIUAhUCEwEXARMAGQAfDw8BA="
+            }
           }
         },
         "eyeR": {
-          "lowerLid": {
-            "cover": 0.6
+          "frames": {
+            "open": {
+              "w": 16,
+              "h": 16,
+              "palette": [
+                "#FFD700"
+              ],
+              "data": "8PDw8PDwUDGgUYBxYCEwIUAhUCEwEXARMAGQAfDw8BA="
+            }
           }
         }
       }

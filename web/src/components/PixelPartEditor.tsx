@@ -24,6 +24,9 @@ interface Props {
   // v2.1: overlay expression frames live at overlay.expr.<name>; passing the
   // node path here points the board at that frame instead of the base one
   basePath?: string;
+  // v3: where the symmetry mirror lands. Defaults to the partner's base
+  // frames; expression tabs pass the partner's own-frame path instead.
+  mirrorBase?: string;
   // wizard remote control: lands the board on this frame tab when it changes;
   // the user can still switch tabs freely afterwards
   frameOverride?: FrameKey;
@@ -37,7 +40,7 @@ const DUAL: Record<string, [string, string]> = {
   mouth: ['mouth open frame', 'mouth closed frame'],
 };
 
-export default function PixelPartEditor({ target, doc, symLock, showBaseNote, basePath, frameOverride, commit, history }: Props) {
+export default function PixelPartEditor({ target, doc, symLock, showBaseNote, basePath, mirrorBase, frameOverride, commit, history }: Props) {
   const { t } = useI18n();
   const dualLabels = DUAL[target];
   // resting frame first: eyes sit open, the mouth sits closed
@@ -71,8 +74,15 @@ export default function PixelPartEditor({ target, doc, symLock, showBaseNote, ba
   const commitFrame = (f: SpriteFrame, key?: string) =>
     commit((d) => {
       let next = setPath(d, `${base}.frames.${active}`, encodeFrame(f, maxW, maxH));
-      if (symLock && pair && getPath(d, `parts.${pair}.shape`) === 'pixel')
-        next = setPath(next, `parts.${pair}.frames.${active}`, encodeFrame(flipH(f)));
+      if (symLock && pair && getPath(d, `parts.${pair}.shape`) === 'pixel') {
+        // partner still inheriting while this side owns: promote it with a
+        // copy of its base pair first, so one lock-drawn stroke flips both
+        if (mirrorBase && !getPath(next, `${mirrorBase}.frames`)) {
+          const bf = getPath(next, `parts.${pair}.frames`);
+          if (bf) next = setPath(next, `${mirrorBase}.frames`, structuredClone(bf));
+        }
+        next = setPath(next, `${mirrorBase ?? `parts.${pair}`}.frames.${active}`, encodeFrame(flipH(f)));
+      }
       return next;
     }, key);
 
@@ -109,7 +119,7 @@ export default function PixelPartEditor({ target, doc, symLock, showBaseNote, ba
         <div className="panel-hint">
           {t(isOverlay
             ? 'editing the base layer — pick "own frame" to change it for this expression'
-            : 'pixel frames belong to the base face')}
+            : 'editing the base frames — pick "own frames" to redraw them for this expression')}
         </div>
       )}
       {dualLabels && (

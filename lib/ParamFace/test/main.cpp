@@ -172,6 +172,35 @@ int main(int argc, char** argv) {
   pix.setExpression(Expression::Neutral);
   printf("per-expression overlay: neutral/happy blush, angry vein, sleepy hidden — ok\n");
 
+  // v3 per-expression part frames: happy owns golden "^" eye frames (open
+  // only), neutral keeps the white base discs, the mouth inherits everywhere
+  const uint16_t kGold = ((0xFFD700 >> 8) & 0xF800) | ((0xFFD700 >> 5) & 0x07E0) | ((0xFFD700 >> 3) & 0x001F);
+  pix.render(&canvas);
+  if (count565(kGold) != 0) {
+    fprintf(stderr, "FAIL: neutral leaked the happy own eye frame\n");
+    return 1;
+  }
+  pix.setExpression(Expression::Happy);
+  for (int i = 0; i < 400 && pix.driven().eyeOpenL < 0.9f; i++) pix.tick(16);
+  pix.render(&canvas);
+  dumpPPM(canvas, "out_pixel_happy_own.ppm");
+  if (count565(kGold) == 0) {
+    fprintf(stderr, "FAIL: happy did not render its own eye frame\n");
+    return 1;
+  }
+  // blink on happy: no own closed frame, pickFrame falls back to the own open
+  for (int i = 0; i < 8000; i++) {
+    pix.tick(16);
+    if (pix.driven().eyeOpenL < 0.4f) break;
+  }
+  pix.render(&canvas);
+  if (count565(kGold) == 0) {
+    fprintf(stderr, "FAIL: happy blink lost the own eye frame (fallback broken)\n");
+    return 1;
+  }
+  pix.setExpression(Expression::Neutral);
+  printf("per-expression part frames: happy gold arcs, neutral clean, blink fallback — ok\n");
+
   // smooth (P8): 8x8 two-px diagonal at scale 8 — Scale2x must change the
   // staircase, and at scale 1 (no pass) smooth must be a no-op
   static const char* kSmoothFace = R"({

@@ -78,6 +78,18 @@ for (const [ox, oy] of [[0, 0], [4, 0], [0, 4], [4, 4]] as const)
     set(vein, OVERLAY_W, 60 + ox + 1, 8 + oy + i, 1);
   }
 
+// v3 per-expression part frames: happy swaps both eyes for golden "^" arcs.
+// Own open frame only — the closed slot stays empty so the C++ test also
+// covers the pickFrame fallback (a blink on happy keeps showing the arc).
+const happyEye = grid(16, 16);
+for (let x = 2; x <= 13; x++) {
+  const t = (x - 2) / 11;
+  const y = 10 - Math.round(4 * Math.sin(Math.PI * t));
+  for (let d = 0; d < 3; d++) set(happyEye, 16, x, y + d, 1);
+}
+const happyEyeFrame = () =>
+  encodeFrame({ w: 16, h: 16, palette: ['#FFD700'], pixels: happyEye });
+
 const doc = {
   version: 1,
   meta: { name: 'Pixel Demo', author: 'stackchan-face-editor' },
@@ -135,9 +147,11 @@ const doc = {
   },
   expressions: {
     happy: {
+      // own part frames instead of a lid squint: the mouth carries no entry,
+      // so it inherits the base pair — partial ownership is the common case
       parts: {
-        eyeL: { lowerLid: { cover: 0.6 } },
-        eyeR: { lowerLid: { cover: 0.6 } },
+        eyeL: { frames: { open: happyEyeFrame() } },
+        eyeR: { frames: { open: happyEyeFrame() } },
       },
     },
     angry: {

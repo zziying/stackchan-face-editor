@@ -129,7 +129,8 @@ const ZH: Record<string, string> = {
   apply: '应用',
   'copy other frame': '复制另一帧',
   'squash from open': '压扁生成初稿',
-  'pixel frames belong to the base face': '像素画所有表情共用——这里改了，每个表情都会变（表情只能挪位置）',
+  'editing the base frames — pick "own frames" to redraw them for this expression':
+    '正在编辑基础帧——这里改了每个表情都会变；想让这个表情单独画，选「专属帧」',
   'editing the base layer — pick "own frame" to change it for this expression':
     '正在编辑基础层——想让这个表情不一样，选「专属帧」',
   Overlay: '装饰层',
@@ -140,6 +141,7 @@ const ZH: Record<string, string> = {
   'inherit base': '跟随基础',
   hidden: '隐藏',
   'own frame': '专属帧',
+  'own frames': '专属帧',
   'the overlay is hidden on this expression': '这个表情不显示装饰层',
   // wizard
   Wizard: '向导',
