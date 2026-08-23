@@ -59,6 +59,17 @@ Flash it once, then swap faces forever without recompiling — from the editor
 ("Push to device" over Web Serial), from a script over the serial monitor, or
 by dropping a `face.json` onto the SD card.
 
+> **Back up before flashing**: the reference firmware overwrites whatever the
+> robot was running, whole-chip. Dump the existing flash with esptool first and
+> one command brings it all back (the CoreS3 has 16MB of flash):
+>
+> ```bash
+> # back up (esptool ships with arduino-cli's esp32 core; also: pip install esptool)
+> esptool.py --port /dev/cu.usbmodemXXX --baud 921600 read_flash 0x0 0x1000000 stackchan-backup.bin
+> # restore the original firmware
+> esptool.py --port /dev/cu.usbmodemXXX --baud 921600 write_flash 0x0 stackchan-backup.bin
+> ```
+
 ```bash
 arduino-cli compile --fqbn m5stack:esp32:m5stack_cores3 \
   --library $PWD/lib/ParamFace firmware/ParamFaceReference/

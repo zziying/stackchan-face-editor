@@ -35,6 +35,8 @@ const ZH: Record<string, string> = {
     '既想要捏好的脸、又想用回自家固件？走集成路线：把 ParamFace 库接进你的固件（README 路线 B）',
   'it replaces the firmware the robot was running — servo moves / voice features of the original are gone':
     '它会替换掉机器人原来的固件——原固件的舵机动作/语音等功能会消失',
+  'back up first: dump the original firmware with esptool and one command restores it — commands in the README':
+    '烧录前先备份：用 esptool 把原固件整片读出来，想回去一条命令就够——命令见 README',
   'flashing fails while a browser tab holds the serial port — disconnect (or close the editor tab) first':
     '浏览器占着串口时烧录会失败——先断开连接（或关掉编辑器 tab）再烧',
   'full guide in the README': 'README 里的完整指南',

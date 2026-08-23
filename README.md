@@ -45,6 +45,15 @@ DESIGN.md  完整决策日志：架构设计与 schema 规范 S1-S8
 `firmware/ParamFaceReference/` 是一个极简固件，其唯一职责就是当一张脸：以约 30 fps 的帧率渲染 ParamFace 并解析编辑器的串口协议。
 烧录一次即可，之后无需重新编译即可永久换脸 —— 可以通过编辑器（Web Serial「推送至设备」）、串口监视器的脚本，或者直接将 `face.json` 丢进 SD 卡。
 
+> **烧录前先备份**：参考固件会整片覆盖机器人原本的固件。先用 esptool 把现有闪存完整读出来，之后随时一条命令就能回到烧录前的状态（CoreS3 为 16MB 闪存）：
+>
+> ```bash
+> # 备份（esptool 随 arduino-cli 的 esp32 核心安装，也可 pip install esptool）
+> esptool.py --port /dev/cu.usbmodemXXX --baud 921600 read_flash 0x0 0x1000000 stackchan-backup.bin
+> # 恢复原固件
+> esptool.py --port /dev/cu.usbmodemXXX --baud 921600 write_flash 0x0 stackchan-backup.bin
+> ```
+
 ```bash
 arduino-cli compile --fqbn m5stack:esp32:m5stack_cores3 \
   --library $PWD/lib/ParamFace firmware/ParamFaceReference/

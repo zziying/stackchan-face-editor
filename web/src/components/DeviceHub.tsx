@@ -66,6 +66,7 @@ export default function DeviceHub({ serial, serialOk, http, wifiOk, onClose }: P
         <p>{t('the reference firmware turns a StackChan into a face this editor drives live; faces load as data, so swapping faces never needs another compile')}</p>
         <ul>
           <li>{t('it replaces the firmware the robot was running — servo moves / voice features of the original are gone')}</li>
+          <li>{t('back up first: dump the original firmware with esptool and one command restores it — commands in the README')}</li>
           <li>{t('want your sculpted face AND your own firmware? integrate the ParamFace library instead — Path B in the README')}</li>
           <li>{t('flashing fails while a browser tab holds the serial port — disconnect (or close the editor tab) first')}</li>
         </ul>
