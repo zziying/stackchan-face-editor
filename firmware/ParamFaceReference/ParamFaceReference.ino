@@ -24,6 +24,7 @@
 
 #include <FFat.h>
 #include <M5Unified.h>
+// KEKE-CONTRACT(firmware-paramface) 消费方：参考固件
 #include <ParamFace.h>
 #include <SD.h>
 #include <SPIFFS.h>

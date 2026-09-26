@@ -50,6 +50,7 @@ export function useDeviceHttp(onError: (msg: string) => void) {
   }, []);
 
   // save=false applies to device RAM only; save=true also persists to flash.
+  // KEKE-CONTRACT(firmware-paramface) WiFi直推：POST /face
   const pushFace = useCallback(async (json: string, save: boolean): Promise<boolean> => {
     abortRef.current?.abort();
     const ac = new AbortController();

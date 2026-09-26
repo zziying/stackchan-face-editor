@@ -175,6 +175,7 @@ if (headerPath) {
     'static const char KE_FACE_DEFAULT[] = R"PF(' +
     JSON.stringify(doc) +
     ')PF";\n';
+  // KEKE-CONTRACT(firmware-paramface) 生成ke_face_default.h勿手改
   writeFileSync(headerPath, header);
   console.log('wrote', headerPath);
 }
